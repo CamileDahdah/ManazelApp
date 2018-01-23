@@ -94,8 +94,8 @@ public class RayCast : MonoBehaviour {
 	}
 
 	void FadeToWhite(){
-		FadeImage.enabled = true;
 		FadeImage.color = new Color (0, 0, 0, 1);
+		FadeImage.canvasRenderer.SetAlpha (1);
 		FadeImage.CrossFadeAlpha (0f, 1f, false);
 	}
 }

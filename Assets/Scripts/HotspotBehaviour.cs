@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class HotspotBehaviour : MonoBehaviour {
 
-	public Texture textureView;
+	public int viewNumber;
 
 	public void ChangeView(){
 		
 		transform.parent.gameObject.SetActive (false);
-		Main.instance.GetMainMaterial ().mainTexture = textureView;
+		Main.instance.ChangeView (viewNumber);
 
 	}
 }

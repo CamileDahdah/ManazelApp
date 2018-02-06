@@ -1,0 +1,8 @@
+Please note that the PanoramaToCubemap functionality was made by Yutaka Yoshisaka.
+You can see the original asset store page at: https://www.assetstore.unity3d.com/en/#!/content/13616
+
+Yutaka has very kindly agreed to include the PanoramaToCubemap asset with the Panoramic Framework to make things easier for everyone.
+
+If you use this functionality, please concider thanking him at the original page.
+
+Thanks

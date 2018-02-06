@@ -7,12 +7,13 @@ public class DragCamera : MonoBehaviour {
 	public float dragSpeed = 8f;
 	Vector2 previousPosition;
 	float maxDragSpeed;
-	Vector3 direction ;
+	Vector3 direction, direction2;
 	float desiredSpeed;
 
 	//touch
 	Touch touch;
 	int touchID;
+	bool zoom;
 
 	//camera 
 	public float perspectiveZoomSpeed = 0.5f;
@@ -26,31 +27,27 @@ public class DragCamera : MonoBehaviour {
 		desiredSpeed = maxDragSpeed / 1.5f;
 		camera = GetComponent<Camera> ();
 		maxFieldOfView = camera.fieldOfView;
+		Input.gyro.enabled = true;
+		zoom = false;
 	}
 
+	void OnEnable(){
+		
+	}
 
 	void Update () {
 
 
-
 		#if UNITY_EDITOR
 			if (Input.GetMouseButtonDown (0)) { //on press
-				dragSpeed = maxDragSpeed;
-				previousPosition = new Vector2 (Input.mousePosition.x, Input.mousePosition.y);
+				BeginInput(Input.mousePosition);
+				
 
 			} else if (Input.GetMouseButton (0)) { //while pressing 
+				MoveInput(Input.mousePosition);
 
-				 direction = Camera.main.ScreenToViewportPoint(Input.mousePosition - new Vector3(previousPosition.x,previousPosition.y, 0));
-				 transform.RotateAround(transform.position, transform.right, direction.y * dragSpeed);
-				 transform.RotateAround(transform.position, Vector3.up, - direction.x * dragSpeed);
-				dragSpeed = Mathf.Lerp(dragSpeed, 0, Time.deltaTime * (maxDragSpeed / desiredSpeed));
-			} 
-			else{
-	
-			dragSpeed = Mathf.Lerp(dragSpeed, 0, Time.deltaTime * (maxDragSpeed / desiredSpeed));
-				transform.RotateAround(transform.position, transform.right, direction.y * dragSpeed);
-				transform.RotateAround(transform.position, Vector3.up,  - direction.x * dragSpeed);
-			
+			} else{
+				EndInput();
 			}
 
 		#elif UNITY_ANDROID || UNITY_IOS
@@ -58,12 +55,13 @@ public class DragCamera : MonoBehaviour {
 
 			if (Input.touchCount >= 2){
 				
+				dragSpeed = 0;
+
 				// Store both touches.
 				Touch touchZero = Input.GetTouch(0);
 				Touch touchOne = Input.GetTouch(1);
 
-				previousPosition = new Vector2 (touchZero.position.x, touchZero.position.y);
-				dragSpeed = 0;
+				zoom = true;
 
 				// Find the position in the previous frame of each touch.
 				Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
@@ -93,54 +91,122 @@ public class DragCamera : MonoBehaviour {
 					// Clamp the field of view to make sure it's between 0 and 180.
 					camera.fieldOfView = Mathf.Clamp(camera.fieldOfView, 30f, maxFieldOfView);
 				}
-		}else{ 
+			}else{ 
 			
-			if(!camera.orthographic){
-				if(camera.fieldOfView < maxFieldOfView){
-					camera.fieldOfView = Mathf.MoveTowards(camera.fieldOfView, maxFieldOfView, Time.deltaTime * 150);
-				}
-			}
-			if(Input.touchCount == 1){
-			touch = Input.GetTouch(0);
-
-			switch (touch.phase){
-
-				case TouchPhase.Began:
-					touchID = touch.fingerId;
-					previousPosition = new Vector2 (touch.position.x, touch.position.y);
-					dragSpeed = maxDragSpeed;
-					break;
-				
-				case TouchPhase.Moved :
-				case TouchPhase.Stationary:
-					if(touchID != touch.fingerId){
-						previousPosition = new Vector2 (touch.position.x, touch.position.y);
-						touchID = touch.fingerId;
+				if(!camera.orthographic){
+					if(camera.fieldOfView < maxFieldOfView){
+						camera.fieldOfView = Mathf.MoveTowards(camera.fieldOfView, maxFieldOfView, Time.deltaTime * 150);
 					}
+				}
 
-					direction = Camera.main.ScreenToViewportPoint(new Vector3 (touch.position.x, touch.position.y, 0f) - 
-						new Vector3(previousPosition.x,previousPosition.y, 0));
-					transform.RotateAround(transform.position, transform.right, direction.y * dragSpeed);
-					transform.RotateAround(transform.position, Vector3.up, - direction.x * dragSpeed);
-					dragSpeed = Mathf.Lerp(dragSpeed, 0, Time.deltaTime * (maxDragSpeed / desiredSpeed));
+				if(Input.touchCount == 1){
+					touch = Input.GetTouch(0);
 
-					break;
+					switch (touch.phase){
 
-				case TouchPhase.Ended:
-					dragSpeed = Mathf.Lerp(dragSpeed, 0, Time.deltaTime * (maxDragSpeed / desiredSpeed));
-					break;
+						case TouchPhase.Began:
+							touchID = touch.fingerId;
+							BeginInput(touch.position);
+							break;
+						
+						case TouchPhase.Moved :
+						case TouchPhase.Stationary:
 
-			}
-		}
-			else{
+							if(zoom){
+								touchID = touch.fingerId;
+								previousPosition = new Vector2 (touch.position.x, touch.position.y) *  scaleDPI();
+								zoom = false;
+							}
+							MoveInput(touch.position);						
+							
+							break;
 
-			dragSpeed = Mathf.Lerp(dragSpeed, 0, Time.deltaTime * (maxDragSpeed / desiredSpeed));
-				transform.RotateAround(transform.position, transform.right, direction.y * dragSpeed);
-				transform.RotateAround(transform.position, Vector3.up,  - direction.x * dragSpeed);
+						case TouchPhase.Ended:
+								dragSpeed = Mathf.Lerp(dragSpeed, 0, Time.deltaTime * (maxDragSpeed / desiredSpeed));
+							break;
 
-			}
+						}
+				}
+				else{
+					Debug.Log("F");
+					EndInput();
+
+				}
 		}
 		#endif
 
+		transform.parent.Rotate (0, - Input.gyro.rotationRate.y, 0);
+		transform.Rotate (- Input.gyro.rotationRate.x, 0, 0, Space.Self);
+
+		ClampRotation(-30f, 75f, 0);
 	}
+
+
+	void BeginInput(Vector3 input){
+		dragSpeed = maxDragSpeed;
+		previousPosition = new Vector2 (input.x, input.y) *  scaleDPI();
+	}
+
+
+	void MoveInput(Vector3 input){ 
+		direction2 = Camera.main.ScreenToViewportPoint (input * scaleDPI() - new Vector3 (previousPosition.x, previousPosition.y, 0) );
+		direction = new Vector2 (input.x, input.y) *  scaleDPI() - previousPosition; 
+		 
+		transform.RotateAround(transform.position, transform.right, direction.y * 0.1f);
+		transform.parent.RotateAround(transform.parent.position, transform.parent.up, - direction.x * 0.1f);
+
+		previousPosition = new Vector2 (input.x, input.y) *  scaleDPI(); 
+
+	}
+
+	void EndInput(){
+		dragSpeed = Mathf.Lerp(dragSpeed, 0, Time.deltaTime * (maxDragSpeed / desiredSpeed));
+
+		transform.RotateAround(transform.position, transform.right, direction2.y * dragSpeed);
+		transform.parent.RotateAround(transform.parent.position, transform.parent.up, - direction2.x * dragSpeed);
+
+	}
+
+	float scaleDPI(){
+		return 1 / Screen.dpi * 221f;
+	}
+
+	void ClampRotation(float minAngle, float maxAngle, float clampAroundAngle = 0){
+		
+		clampAroundAngle += 180;
+		float x = transform.rotation.eulerAngles.x - clampAroundAngle;
+
+		x = WrapAngle(x);
+
+		x -= 180;
+
+		x = Mathf.Clamp(x, minAngle, maxAngle);
+
+		x += 180;
+
+		transform.localRotation = Quaternion.Euler(x + clampAroundAngle, 0, 0);
+	}
+
+
+	//Make sure angle is within 0,360 range
+	float WrapAngle(float angle){
+		
+		while (angle < 0)
+			angle += 360;
+
+		return Mathf.Repeat(angle, 360);
+	}
+
+	void OnDisable(){
+		dragSpeed = 0;
+
+		if (camera.orthographic){
+			camera.orthographicSize = Mathf.Max(camera.orthographicSize);
+		}
+
+		else{
+			camera.fieldOfView = maxFieldOfView;
+		}
+	}
+
 }

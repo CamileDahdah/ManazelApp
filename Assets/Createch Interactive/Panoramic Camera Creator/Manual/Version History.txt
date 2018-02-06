@@ -1,0 +1,82 @@
+Createch Interactive Panoramic Framework
+
+www.createchinteractive.com
+
+Version 1.0
+--------------
+Base Release
+
+
+Version 1.1
+--------------
+CHANGES
+
+- Camera's horizontal rotation no longer has to be at 0, camera will now assume the initial horizontal offset and work from that offset.
+
+- Updated the manual
+
+
+NEW FEATURES
+
+- Added a new GUI control scheme. It can now be assigned via the Panoramic Camera Creator screen, or alternatively, just drag the GuiControls script on to ready made Panoramic Camera setup. It must optionally be assigned the included GUI Controls skin.
+
+- Added feature to check if the users interaction was over a GUI element, and if so, to not activate an underlaying hotspot
+
+- Added new option to invert the mouse zoom, it can be accessed via the Panoramic Camera Creator screen, or alternatively, on the PanoControls script on a ready made Panoramic Camera setup
+
+
+Version 1.2
+--------------
+CHANGES
+
+- Added custom inspector to PanoControls (Cosmetic change)
+
+
+NEW FEATURES
+
+- Added new options to invert the mouse horizontal and vertical panning, they can be accessed via the Panoramic Camera Creator screen, or alternatively, on the PanoControls script on a ready made Panoramic Camera setup
+
+- Added new option to invert the touch horizontal and vertical panning, they can be accessed via the Panoramic Camera Creator screen, or alternatively, on the PanoControls script on a ready made Panoramic Camera setup
+
+- Added new option to invert the mouse horizontal and vertical panning, they can be accessed via the Panoramic Camera Creator screen, or alternatively, on the PanoControls script on a ready made Panoramic Camera setup
+
+
+Version 1.2.1
+--------------
+NEW FEATURES
+
+- Added the Panorama to Cubemap asset to the framework. This allows users to convert a spherical panorama to the cube-from/skybox panorama that the Panoramic framework requires. Special thanks to Yutaka Yoshisaka for kindly agreeing to it being included in the framework.
+<<<<<<< .mine
+- You can view the orinigal asset store page of the Panorama to Cubemap asset here: https://www.assetstore.unity3d.com/en/#!/content/13616
+
+
+Version 1.2.2
+--------------
+CHANGES
+
+- Updated deprecated unity features. Unity warnings will no longer be given.
+
+- Send Hotspot ID Internal, now actually sends the hotspot ID.
+
+
+NEW FEATURES
+
+- Added new extra features script PlaySoundAndLoadScene. This script as the name suggests, allows you to play a sound, wait for it to finish playing, and then load a scene.=======
+
+- You can view the orinigal asset store page of the Panorama to Cubemap asset here: https://www.assetstore.unity3d.com/en/#!/content/13616
+
+
+Version 1.2.2
+--------------
+CHANGES
+
+- Updated deprecated unity features. Unity warnings will no longer be given.
+
+- Send Hotspot ID Internal, now actually sends the hotspot ID.
+
+
+NEW FEATURES
+
+- Added new extra features script PlaySoundAndLoadScene. This script as the name suggests, allows you to play a sound, wait for it to finish playing, and then load a scene.
+
+>>>>>>> .r21

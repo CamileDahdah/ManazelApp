@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class RayCast : MonoBehaviour {
 
-	RaycastHit2D[] raycastHit = new RaycastHit2D[1];
-	LayerMask layerMask; 
+	RaycastHit[] raycastHit = new RaycastHit[1];
+	LayerMask hotspotLayerMask, objectLayerMask; 
 	GameObject hotspot;
 	int hotspotID;
 
@@ -14,31 +14,33 @@ public class RayCast : MonoBehaviour {
 	//touch
 	Touch touch;
 	int touchID;
+	string objectID;
+	float timer, timeLimit = .125f;
+	bool clicking;
 
 	void Awake(){
-		layerMask = LayerMask.NameToLayer("Hotspot");
+		hotspotLayerMask = LayerMask.NameToLayer("Hotspot");
+		objectLayerMask = LayerMask.NameToLayer("Object");
 		hotspot = null;
+		timer = 0;
+		clicking = false;
 	}
+
 
 	void Update () {
 		#if UNITY_EDITOR
 
 			if (Input.GetMouseButtonDown (0)) {
 				hotspotID = -99;
-				
-				if( DetectHotspot(ref hotspot)) {
-					hotspotID = hotspot.GetInstanceID();
-				}
+				DetectObject(false); 
 
 			}else if (Input.GetMouseButtonUp (0)){
-			
-				if( DetectHotspot(ref hotspot) && (hotspot.GetInstanceID() == hotspotID)) {
-					ClickHotspot(hotspot);
-				}
+				DetectObject(true);  
 			}
 						
-			
+
 		#elif UNITY_ANDROID || UNITY_IOS
+
 			if (Input.touchCount == 1){
 				
 				touch = Input.GetTouch(0);
@@ -47,10 +49,9 @@ public class RayCast : MonoBehaviour {
 
 					case TouchPhase.Began:
 						hotspotID = -99;
-						if( DetectHotspot(ref hotspot)) {
-							touchID = touch.fingerId;
-							hotspotID = hotspot.GetInstanceID();
-						}
+						DetectObject(false);  
+						touchID = touch.fingerId;
+
 					break;
 
 					case TouchPhase.Moved:
@@ -61,35 +62,78 @@ public class RayCast : MonoBehaviour {
 					break;
 
 					case TouchPhase.Ended:
-						if( DetectHotspot(ref hotspot) && touchID == touch.fingerId && hotspotID == hotspot.GetInstanceID()) {
-							ClickHotspot(hotspot);
+						if(touchID == touch.fingerId) {
+							DetectObject(true); 
 						}
 					break;
-
 				}
+
 			}else{
 				touchID = -99;
 			}
+
 		#endif
 
+		if (clicking) {
+			timer += Time.deltaTime;
+		} else {
+			timer = 0;
+		}
 	}
 
-	bool DetectHotspot(ref GameObject gameObject){
-		
-		if (Physics2D.GetRayIntersectionNonAlloc(Camera.main.ScreenPointToRay(Input.mousePosition), raycastHit, 10f) > 0){
+	void DetectObject(bool pressUp){
 
-			if (raycastHit [0].transform.gameObject.layer == layerMask.value) {
-				gameObject = raycastHit [0].transform.gameObject;
-				return true;
-			}
+		if (pressUp) {
+			clicking = false;
+		} else {
+			clicking = true;
 		}
 
-		gameObject = null;
-		return false;
+		if (timer < timeLimit) {
+			
+			if (Physics.RaycastNonAlloc (Camera.main.ScreenPointToRay (Input.mousePosition), raycastHit, 10f) > 0) {
+				
+				for (int i = 0; i < raycastHit.Length; i++) {
+					
+					if (raycastHit [i].transform.gameObject.layer == hotspotLayerMask.value) {
+					
+						hotspot = raycastHit [i].transform.gameObject;
+
+						if (pressUp) {
+						
+							if (hotspot.GetInstanceID () == hotspotID) {
+								ClickHotspot (hotspot);
+							}
+
+						} else {
+							hotspotID = hotspot.GetInstanceID ();
+						}
+					// if hotspot found stop
+						return;
+					}
+				}
+
+			// else if hotspot not found 
+			  if (raycastHit [0].transform.gameObject.layer == objectLayerMask.value) {
+					
+					if (pressUp) {
+						
+						if (objectID == raycastHit [0].transform.parent.GetComponent<SelectedObject> ().id) {
+							AnimateSpriteManager.instance.AnimateSequence (objectID);
+						}
+					}
+					else {
+						objectID = raycastHit [0].transform.parent.GetComponent<SelectedObject> ().id;
+					}
+
+				}
+			}
+		}
+	
 	}
 
 	void ClickHotspot(GameObject hotspot){
-		hotspot.GetComponent<HotspotBehaviour>().ChangeView();
+		hotspot.transform.parent.GetComponent<HotspotBehaviour>().ChangeView();
 		FadeToWhite();
 	}
 

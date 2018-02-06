@@ -8,12 +8,14 @@ public class Main : MonoBehaviour {
 	Material mainMaterial;
 	public static Main instance;
 
-	public GameObject hotspotParent;
+	public GameObject hotspotParent, objectParent;
 
-	string resourcehotspots = "Hotspots", roomPath = "LivingRoom" , viewPath = "View", texturePath = "Textures";
+	string resourcehotspots = "Hotspots", roomPath = "LivingRoom" , viewPath = "View", texturePath = "Textures", objectPath = "Objects";
 	string roomsPath = "Rooms";
 	List<GameObject> hotspotList = new List<GameObject>();
+	List<GameObject> objectList = new List<GameObject>();
 	List<Texture> textureList = new List<Texture>();
+	public int currentViewNumber = 0;
 
 	void Awake () {
 		
@@ -48,26 +50,28 @@ public class Main : MonoBehaviour {
 		GameObject originalHotspot = Resources.Load<GameObject>("OriginalHotspot");
 
 		SpriteRenderer originalSprite = originalHotspot.GetComponent<SpriteRenderer> ();
-		BoxCollider2D originalBoxCollider2D = originalHotspot.GetComponent<BoxCollider2D> ();
+		BoxCollider originalBoxCollider = originalHotspot.GetComponent<BoxCollider> ();
 
-		GameObject childOriginalHotspot = null;
+		//GameObject childOriginalHotspot = null;
 
-		if (originalHotspot.transform.childCount > 0) {
-			childOriginalHotspot = originalHotspot.transform.GetChild (0).gameObject;
-		}
+		//if (originalHotspot.transform.childCount > 0) {
+		//	childOriginalHotspot = originalHotspot.transform.GetChild (0).gameObject;
+		//}
 
 		foreach (GameObject hotspotParent in hotspotList) {
 			foreach (Transform hotspotChild in hotspotParent.transform) {
 				
-				hotspotChild.transform.localScale = originalHotspot.transform.localScale;
-				hotspotChild.gameObject.AddComponent (originalSprite);
-				hotspotChild.gameObject.AddComponent (originalBoxCollider2D);
+				//hotspotChild.transform.localScale = originalHotspot.transform.localScale;
+				//hotspotChild.gameObject.AddComponent (originalSprite);
+				//hotspotChild.gameObject.AddComponent (originalBoxCollider);
 
-				hotspotChild.gameObject.GetComponent<BoxCollider2D>().offset = originalBoxCollider2D.offset;
-
-				if (childOriginalHotspot) {
-					Instantiate (childOriginalHotspot, hotspotChild);
+				//hotspotChild.gameObject.GetComponent<BoxCollider>(). = originalBoxCollider.o;
+				if(hotspotChild.childCount > 0){
+					Destroy(hotspotChild.GetChild(0).gameObject);
 				}
+
+				Instantiate (originalHotspot, hotspotChild);
+
 			}
 		}
 
@@ -82,13 +86,31 @@ public class Main : MonoBehaviour {
 			textureList.Add(texture);
 		}
 
+		ChangeMaterial (textureList [currentViewNumber]);
+
+		//Load All
+		Object[] objects = Resources.LoadAll (resourceLocation + objectPath);
+
+		foreach (GameObject selectedObject in objects) {
+			objectList.Add(Instantiate (selectedObject, objectParent.transform));
+		}
+
+		for (int i = 1; i < objectList.Count; i++) {
+			objectList [i].SetActive (false);
+		}
+
 	}
 
 	public void ChangeView (int viewNumber){
 		viewNumber--;
+
 		hotspotList [viewNumber].SetActive(true);
+		objectList [viewNumber].SetActive (true);
+
+		objectList [currentViewNumber].SetActive (false);
 
 		ChangeMaterial (textureList [viewNumber]);
+		currentViewNumber = viewNumber;
 	}
 
 	void ChangeMaterial(Texture texture){

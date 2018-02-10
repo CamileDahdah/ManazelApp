@@ -56,9 +56,11 @@ public class AnimateSpriteManager : MonoBehaviour {
 	}
 		
 
-	void XButtonClick(){
+	public void XButtonClick(){
+		
 		spritePanel.SetActive (false);
 		ScriptManager.instance.EnableInput ();
+
 		StopAllCoroutines ();
 		spriteSheet.Clear ();
 		Resources.UnloadUnusedAssets ();

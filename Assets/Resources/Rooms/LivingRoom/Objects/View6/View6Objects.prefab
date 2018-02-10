@@ -300,6 +300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Plant
+  arabicText: "\u062A\uFE8E\uFE92\uFEE7"
 --- !u!135 &135645533054484078
 SphereCollider:
   m_ObjectHideFlags: 1

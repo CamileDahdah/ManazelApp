@@ -301,6 +301,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Plant
+  arabicText: "\u062A\uFE8E\uFE92\uFEE7"
 --- !u!114 &114775363896639018
 MonoBehaviour:
   m_ObjectHideFlags: 1

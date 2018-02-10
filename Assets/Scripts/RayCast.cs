@@ -119,7 +119,8 @@ public class RayCast : MonoBehaviour {
 					if (pressUp) {
 						
 						if (objectID == raycastHit [0].transform.parent.GetComponent<SelectedObject> ().id) {
-							AnimateSpriteManager.instance.AnimateSequence (objectID);
+							ClickObject (objectID);
+
 						}
 					}
 					else {
@@ -141,5 +142,14 @@ public class RayCast : MonoBehaviour {
 		FadeImage.color = new Color (0, 0, 0, 1);
 		FadeImage.canvasRenderer.SetAlpha (1);
 		FadeImage.CrossFadeAlpha (0f, 1f, false);
+	}
+
+	void ClickObject(string objectID){
+		
+		AnimateSpriteManager.instance.AnimateSequence (objectID);
+
+		string speechText = raycastHit [0].transform.parent.GetComponent<SelectedObject> ().arabicText;
+		ArabicText.instance.PopupObject (speechText);
+
 	}
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class SelectedObject : MonoBehaviour {
 
 	public string id;
+	public string arabicText;
 
 	// Use this for initialization
 	void Start () {

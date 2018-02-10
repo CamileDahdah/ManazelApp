@@ -510,6 +510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Closet
+  arabicText: "\uFEEA\uFEE7\u0627\uFEB0\uFEA7"
 --- !u!114 &114365637350462310
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -548,6 +549,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Plant
+  arabicText: "\u062A\uFE8E\uFE92\uFEE7"
 --- !u!114 &114378691040393388
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -560,6 +562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Lamp
+  arabicText: "\u0647\u0631\uFEEE\uFEA0\uFE91\u0627"
 --- !u!114 &114471364710271372
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -588,6 +588,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Closet
+  arabicText: "\uFEEA\uFEE7\u0627\uFEB0\uFEA7"
 --- !u!114 &114770043761216702
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -600,6 +601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Plant
+  arabicText: "\u062A\uFE8E\uFE92\uFEE7"
 --- !u!135 &135060078778563122
 SphereCollider:
   m_ObjectHideFlags: 1

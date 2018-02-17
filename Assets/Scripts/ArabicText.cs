@@ -171,6 +171,8 @@ public class ArabicText : MonoBehaviour {
 		theWord = speechText;
 		audioSource.clip = whatIsThisClip1;
 		audioSource.Play ();
+		GameState.currentState = GameState.State.objectUI;
+		StartCoroutine ("ActivateGoogleVoice");
 	}
 
 	void CorrectAnswer(){
@@ -183,5 +185,18 @@ public class ArabicText : MonoBehaviour {
 		audioSource.clip = wrongAnswerClip;
 		audioSource.Play ();
 	}
+
+	IEnumerator ActivateGoogleVoice(){
+		
+		while (audioSource.isPlaying) {
+			yield return null;
+		}
+		if (GameState.currentState == GameState.State.objectUI) {
+			Debug.Log ("Active");
+			GoogleVoiceSpeech.instance.enabled = true;
+		}
+	}
+
+
 
 }

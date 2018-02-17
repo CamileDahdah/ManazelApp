@@ -190,8 +190,6 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 		
 		uploading = true;
 
-		//textButton.text = "Uploading...";
-
 		float filenameRand = UnityEngine.Random.Range (0.0f, 10.0f);
 
 		string filename = "testing" + filenameRand;
@@ -246,15 +244,22 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 	float[] clipSampleData = new float[256];
 
-	int counter = 0;
+	double speakingCounter = 0;
 	int counterThreshold = 10;
 
-	float soundThreshold = .05f;
+	float soundThreshold = .05f, soundAverage;
+	bool spokeOnce;
+	float speakTimer;
+	float maxTimerThreshold = 20f, refreshRate = .1f, soundSum;
+	int iteration, lastTime;
 
 	IEnumerator IsSpeaking(){
-		
-		counter = 0;
-		int lastTime = 0;
+
+		spokeOnce = false;
+		 
+		speakingCounter = speakTimer = soundAverage = iteration = lastTime = 0;
+		soundThreshold = .048f;
+
 		//Wait till Microphone records
 		while (lastTime <= 0) {
 
@@ -267,36 +272,85 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 		goAudioSource.Play();
 
 		while (recording) {
+			//wait for 20 seconds if no one speaks
+			if (speakTimer < maxTimerThreshold) {
+				
+				speakTimer += refreshRate;
 
+			} else {
+
+				spokeOnce = true;
+			}
+			//compute final threshhold
+			if (iteration == 3) {
+				soundThreshold += soundAverage / iteration;
+			}
+
+			//compute sound Sum and sound Average
 			clipSampleData = new float[256];
 			goAudioSource.GetSpectrumData (clipSampleData, 0, FFTWindow.Rectangular);
 
-			float sum = 0f;
+			soundSum = 0f;
 
 			for (var i = 0; i < clipSampleData.Length; i++) {
 
-				sum += clipSampleData [i];
+				soundSum += clipSampleData [i];
 
 			}
-			arabicText.scoreText.text = "" + sum;
-			if (sum < soundThreshold) {
-				counter++;
 
-			} else {
-				counter = 0;
-			}
+			soundAverage += soundSum;
+//			Debug.Log (soundThreshold);
+			//arabicText.scoreText.text = "" + soundSum;
 
-			if (counter > counterThreshold) {
-				if (!uploading) {
+			//if avg soound is computed
+			if (iteration >= 3) {
+				
+				if (soundSum < soundThreshold) {
+					if (spokeOnce) {
+						speakingCounter--;
+
+					} else {
+						speakingCounter -= .5;
+
+						if (speakingCounter < 0) {
+							speakingCounter = 0;
+						}
+					}
+
+				} else {
+					if (spokeOnce) {
+						speakingCounter = 0;
+					} else {
+						speakingCounter++;
+					}
+
+				}
+
+				if (!spokeOnce) {
+					if (speakingCounter >= (counterThreshold / 3f)) {
+						spokeOnce = true;
+						speakingCounter = 0;
+					}
+				} else if (speakingCounter < - counterThreshold && !uploading) {
+				
 					string filePath = Record ();
 					StartCoroutine ("HttpUploadFile", filePath);
+
 				}
 			}
-
-			yield return new WaitForSeconds(.1f);
-
+			iteration++;
+			yield return new WaitForSeconds(refreshRate);
 		}
+			
+	
 	}
 
+	void OnDisable(){
+		StopAllCoroutines ();
+		recording = false;
+		uploading = false;
+	}
 }
+
+
 		

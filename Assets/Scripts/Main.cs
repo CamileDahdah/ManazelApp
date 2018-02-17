@@ -17,6 +17,8 @@ public class Main : MonoBehaviour {
 	List<Texture> textureList = new List<Texture>();
 	public int currentViewNumber = 0;
 
+	public GameObject cubeTransition;
+
 	void Awake () {
 		
 		if (instance == null) {
@@ -104,18 +106,54 @@ public class Main : MonoBehaviour {
 	public void ChangeView (int viewNumber){
 		viewNumber--;
 
-		hotspotList [viewNumber].SetActive(true);
-		objectList [viewNumber].SetActive (true);
+
 
 		objectList [currentViewNumber].SetActive (false);
 
-		ChangeMaterial (textureList [viewNumber]);
 		currentViewNumber = viewNumber;
+
+
+		StartCoroutine("TransitionAnimation");
 	}
 
 	void ChangeMaterial(Texture texture){
 		mainMaterial.mainTexture = texture;
 	}
+
+
+	IEnumerator TransitionAnimation(){
+
+		Vector3 direction = new Vector3(Camera.main.transform.forward.x, 0 ,Camera.main.transform.forward.z).normalized;
+		cubeTransition.transform.position = Camera.main.transform.position + direction;
+
+		Material cubeTransitionMaterial = cubeTransition.GetComponent<MeshRenderer> ().material;
+
+		cubeTransitionMaterial.mainTexture = textureList [currentViewNumber];
+
+		cubeTransitionMaterial.SetColor("_Color", new Color(1,1,1, 0));
+
+		Color cubeTransitionColor = cubeTransitionMaterial.GetColor("_Color");
+
+		while (Vector3.Distance(cubeTransition.transform.position, gameObject.transform.position) > 0) {
+			
+			cubeTransition.transform.position = Vector3.MoveTowards 
+				(cubeTransition.transform.position, gameObject.transform.position, Time.deltaTime);
+			
+			cubeTransitionMaterial.SetColor("_Color", new Color (cubeTransitionColor.r, cubeTransitionColor.g, cubeTransitionColor.b, 
+				Mathf.MoveTowards(cubeTransitionMaterial.GetColor("_Color").a, 1, Time.deltaTime)));
+			
+			yield return null;
+		}
+
+		gameObject.GetComponent<MeshRenderer> ().material.mainTexture = textureList [currentViewNumber];
+
+		cubeTransitionMaterial.SetColor("_Color", new Color(1,1,1, 0));
+
+
+		hotspotList [currentViewNumber].SetActive(true);
+		objectList [currentViewNumber].SetActive (true);
+	}
+
 
 }
 

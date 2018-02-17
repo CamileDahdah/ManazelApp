@@ -15,7 +15,7 @@ public class RayCast : MonoBehaviour {
 	Touch touch;
 	int touchID;
 	string objectID;
-	float timer, timeLimit = .125f;
+	float timer, timeLimit = .15f;
 	bool clicking;
 
 	void Awake(){
@@ -91,8 +91,8 @@ public class RayCast : MonoBehaviour {
 
 		if (timer < timeLimit) {
 			
-			if (Physics.RaycastNonAlloc (Camera.main.ScreenPointToRay (Input.mousePosition), raycastHit, 10f) > 0) {
-				
+			if ( (raycastHit = Physics.RaycastAll (Camera.main.ScreenPointToRay (Input.mousePosition), 15f)).Length > 0) {
+		
 				for (int i = 0; i < raycastHit.Length; i++) {
 					
 					if (raycastHit [i].transform.gameObject.layer == hotspotLayerMask.value) {
@@ -135,7 +135,7 @@ public class RayCast : MonoBehaviour {
 
 	void ClickHotspot(GameObject hotspot){
 		hotspot.transform.parent.GetComponent<HotspotBehaviour>().ChangeView();
-		FadeToWhite();
+		//FadeToWhite();
 	}
 
 	void FadeToWhite(){

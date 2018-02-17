@@ -62,7 +62,10 @@ public class AnimateSpriteManager : MonoBehaviour {
 		ScriptManager.instance.EnableInput ();
 
 		StopAllCoroutines ();
+		GoogleVoiceSpeech.instance.enabled = false;
+		GameState.currentState = GameState.State.mainGame;
 		spriteSheet.Clear ();
 		Resources.UnloadUnusedAssets ();
+
 	}
 }

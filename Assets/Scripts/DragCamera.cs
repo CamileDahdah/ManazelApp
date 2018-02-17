@@ -128,9 +128,7 @@ public class DragCamera : MonoBehaviour {
 						}
 				}
 				else{
-					Debug.Log("F");
 					EndInput();
-
 				}
 		}
 		#endif

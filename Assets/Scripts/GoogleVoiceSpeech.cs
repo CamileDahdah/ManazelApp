@@ -13,6 +13,7 @@ using ArabicSupport;
 
 public class GoogleVoiceSpeech : MonoBehaviour{
 
+	public GameObject recordingButton;
 	public Text textButton;
 
 	float minimumLevel = 10f;
@@ -47,12 +48,6 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 			Destroy (this);
 		}
 
-	}
-
-	void Start (){
-
-		arabicText = ArabicText.instance;
-
 		apiURL = "https://speech.googleapis.com/v1/speech:recognize?key=" + apiKey;
 
 
@@ -70,6 +65,16 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 			goAudioSource = this.GetComponent<AudioSource> ();
 		}
+
+	}
+
+	void OnEnable(){
+		recordingButton.SetActive (true);
+		RecordClick ();
+	}
+
+	void Start (){
+		arabicText = ArabicText.instance;
 	}
 
 	//onClick
@@ -99,18 +104,17 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 
 	void Update(){
-		
-		if (micConnected) {
-
-			if (!Microphone.IsRecording (null) && recording) {
-				if (!uploading) {
-					string filePath = Record ();
-					StartCoroutine ("HttpUploadFile", filePath);
-				}
-			}
-		}
-
-
+//		
+//		if (micConnected) {
+//
+//			if (!Microphone.IsRecording (null) && recording) {
+//				if (!uploading) {
+//					string filePath = Record ();
+//					StartCoroutine ("HttpUploadFile", filePath);
+//				}
+//			}
+//		}
+//
 	}
 
 	public IEnumerator HttpUploadFile (string filePath){
@@ -131,7 +135,6 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 		string byteString = Convert.ToBase64String(File.ReadAllBytes (filePath));
 		//Debug.Log (byteString);
-
 
 
 		audioNode.Add ("content", new JSONData(byteString));
@@ -244,10 +247,10 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 	float[] clipSampleData = new float[256];
 
-	double speakingCounter = 0;
+	double speakingCounter;
 	int counterThreshold = 10;
 
-	float soundThreshold = .05f, soundAverage;
+	float soundThreshold, soundAverage;
 	bool spokeOnce;
 	float speakTimer;
 	float maxTimerThreshold = 20f, refreshRate = .1f, soundSum;
@@ -283,7 +286,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 			}
 			//compute final threshhold
 			if (iteration == 3) {
-				soundThreshold += soundAverage / iteration;
+				soundThreshold += (soundAverage / iteration) / 2f;
 			}
 
 			//compute sound Sum and sound Average
@@ -300,9 +303,10 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 			soundAverage += soundSum;
 //			Debug.Log (soundThreshold);
-			//arabicText.scoreText.text = "" + soundSum;
+			arabicText.scoreText.text = "" + soundSum;
+			arabicText.limitText.text = "" + soundThreshold;
 
-			//if avg soound is computed
+			//if avg sound is computed
 			if (iteration >= 3) {
 				
 				if (soundSum < soundThreshold) {
@@ -349,6 +353,8 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 		StopAllCoroutines ();
 		recording = false;
 		uploading = false;
+		recordingButton.SetActive (false);
+		Microphone.End(null);
 	}
 }
 

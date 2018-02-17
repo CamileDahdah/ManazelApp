@@ -17,7 +17,7 @@ public class ArabicText : MonoBehaviour {
 	};
 
 	public string theWord = "صحن";
-	public Text scoreText;
+	public Text scoreText, limitText;
 	public static ArabicText instance;
 	private AudioSource audioSource;
 	public AudioClip correctAnswerClip, wrongAnswerClip, whatIsThisClip1, whatIsThisClip2;
@@ -191,8 +191,8 @@ public class ArabicText : MonoBehaviour {
 		while (audioSource.isPlaying) {
 			yield return null;
 		}
+
 		if (GameState.currentState == GameState.State.objectUI) {
-			Debug.Log ("Active");
 			GoogleVoiceSpeech.instance.enabled = true;
 		}
 	}

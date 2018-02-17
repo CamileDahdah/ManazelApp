@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.Video;
 
 public class Main : MonoBehaviour {
 
 	Material mainMaterial;
 	public static Main instance;
 
-	public GameObject hotspotParent, objectParent;
+	public GameObject hotspotParent, objectParent, videoParent;
 
 	string resourcehotspots = "Hotspots", roomPath = "LivingRoom" , viewPath = "View", texturePath = "Textures", objectPath = "Objects";
-	string roomsPath = "Rooms";
+	string roomsPath = "Rooms", videoPath = "Videos", videoViewsPath = "VideoViews";
 	List<GameObject> hotspotList = new List<GameObject>();
 	List<GameObject> objectList = new List<GameObject>();
 	List<Texture> textureList = new List<Texture>();
+	List<GameObject> videoList = new List<GameObject>();
 	public int currentViewNumber = 0;
 
 	public GameObject cubeTransition;
@@ -33,7 +35,6 @@ public class Main : MonoBehaviour {
 		LoadHotspots(livingRoom);
 
 	}
-
 
 	public Material GetMainMaterial(){
 		return mainMaterial;
@@ -54,20 +55,9 @@ public class Main : MonoBehaviour {
 		SpriteRenderer originalSprite = originalHotspot.GetComponent<SpriteRenderer> ();
 		BoxCollider originalBoxCollider = originalHotspot.GetComponent<BoxCollider> ();
 
-		//GameObject childOriginalHotspot = null;
-
-		//if (originalHotspot.transform.childCount > 0) {
-		//	childOriginalHotspot = originalHotspot.transform.GetChild (0).gameObject;
-		//}
-
 		foreach (GameObject hotspotParent in hotspotList) {
 			foreach (Transform hotspotChild in hotspotParent.transform) {
-				
-				//hotspotChild.transform.localScale = originalHotspot.transform.localScale;
-				//hotspotChild.gameObject.AddComponent (originalSprite);
-				//hotspotChild.gameObject.AddComponent (originalBoxCollider);
 
-				//hotspotChild.gameObject.GetComponent<BoxCollider>(). = originalBoxCollider.o;
 				if(hotspotChild.childCount > 0){
 					Destroy(hotspotChild.GetChild(0).gameObject);
 				}
@@ -100,15 +90,37 @@ public class Main : MonoBehaviour {
 		for (int i = 1; i < objectList.Count; i++) {
 			objectList [i].SetActive (false);
 		}
+			
+		//TODO: Change this shit
+		//Load All video views
+		GameObject[] videoViews = Resources.LoadAll<GameObject> (resourceLocation + videoViewsPath);
+
+		foreach (GameObject videoView in videoViews) {
+			videoList.Add(Instantiate (videoView, videoParent.transform));
+		}
+
+		for (int i = 2; i < videoList.Count; i++) {
+			videoList [i].SetActive (false);
+		}
+
+		GameObject[] videoObjects = GameObject.FindGameObjectsWithTag ("Video");
+
+		//load all videos
+		VideoClip[] videoClip = Resources.LoadAll<VideoClip>(resourceLocation + videoPath);
+
+		VideoPlayer videoPlayer = videoList[0].GetComponentInChildren<VideoPlayer>();
+
+		videoPlayer.clip = videoClip[0];
+		videoPlayer.SetDirectAudioMute (0, true);
 
 	}
 
 	public void ChangeView (int viewNumber){
+		
 		viewNumber--;
 
-
-
 		objectList [currentViewNumber].SetActive (false);
+		videoList [currentViewNumber + 1].SetActive (false);
 
 		currentViewNumber = viewNumber;
 
@@ -120,6 +132,7 @@ public class Main : MonoBehaviour {
 		mainMaterial.mainTexture = texture;
 	}
 
+	float transitionSpeed = 2.5f;
 
 	IEnumerator TransitionAnimation(){
 
@@ -137,10 +150,10 @@ public class Main : MonoBehaviour {
 		while (Vector3.Distance(cubeTransition.transform.position, gameObject.transform.position) > 0) {
 			
 			cubeTransition.transform.position = Vector3.MoveTowards 
-				(cubeTransition.transform.position, gameObject.transform.position, Time.deltaTime);
+				(cubeTransition.transform.position, gameObject.transform.position, Time.deltaTime * transitionSpeed);
 			
 			cubeTransitionMaterial.SetColor("_Color", new Color (cubeTransitionColor.r, cubeTransitionColor.g, cubeTransitionColor.b, 
-				Mathf.MoveTowards(cubeTransitionMaterial.GetColor("_Color").a, 1, Time.deltaTime)));
+				Mathf.MoveTowards(cubeTransitionMaterial.GetColor("_Color").a, 1, Time.deltaTime * transitionSpeed)));
 			
 			yield return null;
 		}
@@ -152,6 +165,7 @@ public class Main : MonoBehaviour {
 
 		hotspotList [currentViewNumber].SetActive(true);
 		objectList [currentViewNumber].SetActive (true);
+		videoList [currentViewNumber + 1].SetActive (true);
 	}
 
 

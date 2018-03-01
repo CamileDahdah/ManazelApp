@@ -7,16 +7,7 @@ using ArabicSupport;
 
 public class ArabicText : MonoBehaviour {
 
-	public Dictionary<string, float> wordsTest = new Dictionary<string, float>()
-	{
-		
-		{"كرسي", 100}
-		,{"كرسة", 100},		
-		{"طاولة", 75},		
-				{"صحن",50}			
-	};
-
-	public string theWord = "صحن";
+	public string theWord = "";
 	public Text scoreText, limitText;
 	public static ArabicText instance;
 	private AudioSource audioSource;
@@ -41,7 +32,7 @@ public class ArabicText : MonoBehaviour {
 
 
 	//return percentage
-	public void DetectArabicWords (string speechText, Dictionary<string, float> correctWords){
+	public void DetectArabicWords (string speechText){
 
 		if (speechText != "") {
 
@@ -65,7 +56,7 @@ public class ArabicText : MonoBehaviour {
 				int colorFirstIndex = 0, colorLastIndex = 0;
 				int colorLength = 0;
 
-				foreach (KeyValuePair<string, float> correctWord in correctWords) {
+				//foreach (KeyValuePair<string, float> correctWord in correctWords) {
 					
 					letterCounter = 0;
 
@@ -120,16 +111,16 @@ public class ArabicText : MonoBehaviour {
 							theLetterCounter = letterCounter;
 						}
 
-					}
+					//}
 
 					//word by word
-					if (speechword == correctWord.Key) {
+					/*if (speechword == correctWord.Key) {
 					
 						if (wordCounter < correctWord.Value) {
 							wordCounter = correctWord.Value;
 						}
 
-					}
+					}*/
 				}
 
 				finalText = speechword;
@@ -166,19 +157,19 @@ public class ArabicText : MonoBehaviour {
 		scoreText.text = "Score: 0";
 	}
 
-	public void PopupObject(string speechText){
+	public void PopupObject(string id){
+		StopAllCoroutines ();
 		ResetState ();
-		theWord = speechText;
+		ObjectPanel.instance.AnimateSequence (id);
+		theWord = ReadJSON.instance.GetObjectData(id).lbArabicWord;
 		audioSource.clip = whatIsThisClip1;
 		audioSource.Play ();
-		GameState.currentState = GameState.State.objectUI;
 		StartCoroutine ("ActivateGoogleVoice");
 	}
 
 	void CorrectAnswer(){
 		audioSource.clip = correctAnswerClip;
 		audioSource.Play ();
-		AnimateSpriteManager.instance.XButtonClick ();
 	}
 
 	void WrongAnswer(){
@@ -192,11 +183,30 @@ public class ArabicText : MonoBehaviour {
 			yield return null;
 		}
 
-		if (GameState.currentState == GameState.State.objectUI) {
+		if (GameState.CurrentState == GameState.State.objectPanel) {
 			GoogleVoiceSpeech.instance.enabled = true;
 		}
 	}
 
+	public void PopupNextObject(){
+		ObjectData objectData = ReadJSON.instance.GetNextObjectData ();
+		StopAllCoroutines ();
+		ResetState ();
+		ObjectPanel.instance.AnimateSequence (objectData.id);
+		theWord = objectData.lbArabicWord;
+		audioSource.clip = whatIsThisClip1;
+		audioSource.Play ();
+		StartCoroutine ("ActivateGoogleVoice");
+	}
 
-
+	public void PopupPreviousObject(){
+		ObjectData objectData = ReadJSON.instance.GetPreviousObjectData ();
+		StopAllCoroutines ();
+		ResetState ();
+		ObjectPanel.instance.AnimateSequence (objectData.id);
+		theWord = objectData.lbArabicWord;
+		audioSource.clip = whatIsThisClip1;
+		audioSource.Play ();
+		StartCoroutine ("ActivateGoogleVoice");
+	}
 }

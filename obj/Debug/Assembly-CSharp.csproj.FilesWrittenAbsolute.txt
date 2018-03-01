@@ -21,3 +21,8 @@
 /Users/camilledahdah/Desktop/manzili-app/Temp/bin/Debug/Unity.CecilTools.dll
 /Users/camilledahdah/Desktop/manzili-app/Temp/bin/Debug/Unity.Cecil.Pdb.dll
 /Users/camilledahdah/Desktop/manzili-app/Temp/bin/Debug/Unity.Cecil.Mdb.dll
+/Users/camilledahdah/Desktop/manzili-app/Temp/bin/Debug/Assembly-CSharp.dll.mdb
+/Users/camilledahdah/Desktop/manzili-app/Temp/bin/Debug/Assembly-CSharp.dll
+/Users/camilledahdah/Desktop/manzili-app/obj/Debug/Assembly-CSharp.dll
+/Users/camilledahdah/Desktop/manzili-app/obj/Debug/Assembly-CSharp.dll.mdb
+/Users/camilledahdah/Desktop/manzili-app/Temp/bin/Debug/ArabicSupport.dll

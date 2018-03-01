@@ -120,7 +120,6 @@ public class RayCast : MonoBehaviour {
 						
 						if (objectID == raycastHit [0].transform.parent.GetComponent<SelectedObject> ().id) {
 							ClickObject (objectID);
-
 						}
 					}
 					else {
@@ -145,11 +144,12 @@ public class RayCast : MonoBehaviour {
 	}
 
 	void ClickObject(string objectID){
-		
-		AnimateSpriteManager.instance.AnimateSequence (objectID);
 
-		string speechText = raycastHit [0].transform.parent.GetComponent<SelectedObject> ().arabicText;
-		ArabicText.instance.PopupObject (speechText);
+		UIManager.instance.EnableCurrentPanel (GameState.State.objectPanel);
+		Debug.Log (objectID);
+
+		ArabicText.instance.PopupObject (objectID);
 
 	}
+		
 }

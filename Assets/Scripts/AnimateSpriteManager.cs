@@ -10,7 +10,6 @@ public class AnimateSpriteManager : MonoBehaviour {
 	float frameRate = 1/45f;
 	string spriteResourceLocation = "Sequences";
 	public Button xButton;
-	public GameObject spritePanel;
 
 	public static AnimateSpriteManager instance;
 
@@ -24,15 +23,17 @@ public class AnimateSpriteManager : MonoBehaviour {
 
 		xButton.onClick.AddListener ( () =>  XButtonClick() );
 	}
-		
+
+	void OnEnable(){
+		GameState.CurrentState = GameState.State.objectPanel;
+	}
 
 	public void AnimateSequence(string location){
 
 		//Load All sprites
 		Sprite[] spriteSheetArray = Resources.LoadAll <Sprite> (spriteResourceLocation + "/" + location); 
 		spriteSheet.AddRange (spriteSheetArray);
-		ScriptManager.instance.DisableInput ();
-		spritePanel.SetActive (true);
+
 		StartCoroutine ("Animate");
 	}
 
@@ -57,13 +58,12 @@ public class AnimateSpriteManager : MonoBehaviour {
 		
 
 	public void XButtonClick(){
-		
-		spritePanel.SetActive (false);
-		ScriptManager.instance.EnableInput ();
+
+		UIManager.instance.EnableCurrentPanel(GameState.State.HUDPanel);
 
 		StopAllCoroutines ();
 		GoogleVoiceSpeech.instance.enabled = false;
-		GameState.currentState = GameState.State.mainGame;
+
 		spriteSheet.Clear ();
 		Resources.UnloadUnusedAssets ();
 

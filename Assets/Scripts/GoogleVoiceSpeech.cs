@@ -176,7 +176,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 				Debug.Log ("transcript string: " + transcripts);
 
-				arabicText.DetectArabicWords (transcripts, arabicText.wordsTest);
+				arabicText.DetectArabicWords (transcripts);
 			}
 		}
 		yield return null;

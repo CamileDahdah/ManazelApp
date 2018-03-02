@@ -34,14 +34,18 @@ public class ArabicText : MonoBehaviour {
 	//return percentage
 	public void DetectArabicWords (string speechText){
 
+		bool correct = false;
+
 		if (speechText != "") {
 
 
 			speechText = ArabicFixer.Fix(speechText, true, true);
-				
+			theWord = ArabicFixer.Fix (theWord, true, true);
+
 			string[] speechwords = speechText.Split (' ');
 
-			float wordCounter = 0;
+			Debug.Log ("theWord: " + theWord + "  speechText: " + speechText);
+
 			int wordLength = 0;
 			float letterCounter = 0;
 			float theLetterCounter = 0;
@@ -128,7 +132,7 @@ public class ArabicText : MonoBehaviour {
 				//change Color
 				if (colorLastIndex > colorFirstIndex) {
 					finalText = finalText.Insert (colorLastIndex + 1, "</color>");
-					finalText = finalText.Insert (colorFirstIndex, "<color=#ffffff>");
+					finalText = finalText.Insert (colorFirstIndex, "<color=#02dfa5>");
 				}
 
 				speechText = speechText.Replace (speechword, finalText);
@@ -140,7 +144,10 @@ public class ArabicText : MonoBehaviour {
 			//return theLetterCounter;
 			speechTextUI.text =  speechText;
 
+		
+
 			if (theLetterCounter >= 100) {
+				correct = true;
 				CorrectAnswer ();
 			} else {
 				WrongAnswer ();
@@ -149,15 +156,17 @@ public class ArabicText : MonoBehaviour {
 		} else {
 			speechTextUI.text =  "";
 		}
+
+		ObjectPanel.instance.OnTextResult (correct);
 	}
 
 	private void ResetState(){
 		speechTextUI.text = "";
-		GoogleVoiceSpeech.instance.textButton.text = "Start Recording";
 		scoreText.text = "Score: 0";
 	}
 
 	public void PopupObject(string id){
+		GoogleVoiceSpeech.instance.enabled = false;
 		StopAllCoroutines ();
 		ResetState ();
 		ObjectPanel.instance.AnimateSequence (id);
@@ -183,12 +192,15 @@ public class ArabicText : MonoBehaviour {
 			yield return null;
 		}
 
+		ObjectPanel.instance.Speak ();
+
 		if (GameState.CurrentState == GameState.State.objectPanel) {
 			GoogleVoiceSpeech.instance.enabled = true;
 		}
 	}
 
 	public void PopupNextObject(){
+		GoogleVoiceSpeech.instance.enabled = false;
 		ObjectData objectData = ReadJSON.instance.GetNextObjectData ();
 		StopAllCoroutines ();
 		ResetState ();
@@ -200,6 +212,7 @@ public class ArabicText : MonoBehaviour {
 	}
 
 	public void PopupPreviousObject(){
+		GoogleVoiceSpeech.instance.enabled = false;
 		ObjectData objectData = ReadJSON.instance.GetPreviousObjectData ();
 		StopAllCoroutines ();
 		ResetState ();

@@ -57,8 +57,10 @@ public class GameState : MonoBehaviour {
 	}
 
 	void Start(){
-		if(firstTime){
+		if (firstTime) {
 			UIManager.instance.EnableCurrentPanel (State.languagePanel);
+		} else {
+			UIManager.instance.EnableCurrentPanel (State.HUDPanel);
 		}
 	}
 

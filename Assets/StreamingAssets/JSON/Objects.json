@@ -4,139 +4,142 @@
         "id" : "Sofa",
         "lbArabicWord" : "كنب",
         "saudiArabicWord" : "كنب",
+        "visited" : false,
         "tags": ""
 
-        },
-        {
-        "id" : "Carpet",
-        "lbArabicWord" : "سجاد",
-        "saudiArabicWord" : "مفرش",
-        "tags": ""
         },
         {
         "id" : "Table",
         "lbArabicWord" : "طاولة",
         "saudiArabicWord" : "طاولة",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Dining Table",
         "lbArabicWord" : "طاولة طعام",
         "saudiArabicWord" : "طاولة طعام",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Chair",
         "lbArabicWord" : "كرسي",
         "saudiArabicWord" : "دولاب",
-        "tags": ""
-        },
-        {
-        "id" : "Cupboard",
-        "lbArabicWord" : "خزانه",
-        "saudiArabicWord" : "كنب",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Closet",
         "lbArabicWord" : "خزانه",
         "saudiArabicWord" : "خزانة",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Lamp",
         "lbArabicWord" : "مصباح",
         "saudiArabicWord" : "نور",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Floor Lamp",
         "lbArabicWord" : "مصباح ارضي",
         "saudiArabicWord" : "ابجورة",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Curtain",
         "lbArabicWord" : "ستار",
         "saudiArabicWord" : "ستارة",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Vase",
         "lbArabicWord" : "مزهريه",
         "saudiArabicWord" : "مزهرية",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Clock",
         "lbArabicWord" : "ساعه",
         "saudiArabicWord" : "ساعة",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Sofa",
         "lbArabicWord" : "كنب",
         "saudiArabicWord" : "كنب",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Plant",
         "lbArabicWord" : "نبات",
         "saudiArabicWord" : "زرع",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Plant02",
         "lbArabicWord" : "نبات",
         "saudiArabicWord" : "زرع",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Television",
-        "lbArabicWord" : "تليفزيون",
-        "saudiArabicWord" : "تليفزيون",
+        "lbArabicWord" : "تلفزيون",
+        "saudiArabicWord" : "تلفزيون",
+        "visited" : false,
         "tags": ""
         },
+    
         {
-        "id" : "Pedestal",
-        "lbArabicWord" : "ركازات",
-        "saudiArabicWord" : "ركازات",
-        "tags": ""
-        },
-        {
-        "id" : "Picture",
+        "id" : "FramePicture",
         "lbArabicWord" : "صوره",
         "saudiArabicWord" : "صورة",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Plate",
         "lbArabicWord" : "صحن",
         "saudiArabicWord" : "صحن",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Fork",
         "lbArabicWord" : "شوكه",
         "saudiArabicWord" : "شوكة",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Knife",
         "lbArabicWord" : "سكين",
         "saudiArabicWord" : "سكين",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Spoon",
         "lbArabicWord" : "ملعقه",
         "saudiArabicWord" : "ملعقة",
+        "visited" : false,
         "tags": ""
         },
         {
         "id" : "Flower",
         "lbArabicWord" : "زهره",
         "saudiArabicWord" : "زهرة",
+        "visited" : false,
         "tags": ""
         }
 

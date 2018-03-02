@@ -70,7 +70,7 @@ public class ReadJSON : MonoBehaviour {
 	public ObjectData GetPreviousObjectData(){
 
 		if (currentOrder - 1 < 0) {
-			currentOrder = 0; 
+			currentOrder = length - 1; 
 		} else {
 			currentOrder--;
 		}

@@ -69,7 +69,6 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 	}
 
 	void OnEnable(){
-		recordingButton.SetActive (true);
 		RecordClick ();
 	}
 
@@ -103,23 +102,9 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 	}
 
 
-	void Update(){
-//		
-//		if (micConnected) {
-//
-//			if (!Microphone.IsRecording (null) && recording) {
-//				if (!uploading) {
-//					string filePath = Record ();
-//					StartCoroutine ("HttpUploadFile", filePath);
-//				}
-//			}
-//		}
-//
-	}
-
 	public IEnumerator HttpUploadFile (string filePath){
 				
-		textButton.text = "Uploading ...";
+		ObjectPanel.instance.Loading ();
 
 		yield return null;
 
@@ -134,7 +119,6 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 		configNode.Add ("language_code", new JSONData ("ar-LB"));
 
 		string byteString = Convert.ToBase64String(File.ReadAllBytes (filePath));
-		//Debug.Log (byteString);
 
 
 		audioNode.Add ("content", new JSONData(byteString));
@@ -142,17 +126,15 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 		rootNode.Add ("audio", audioNode);
 
-		string jsson = "{"+"\"config\""+":" +
+		string JSONObject = "{"+"\"config\""+":" +
 			"{"+"\"encoding\":\"LINEAR16\""+"," + "\"sampleRateHertz\""+":"+"\"16000\""+","+ "\"language_code\""+":"+"\"ar-LB\""+"}," +
 			"\"audio\""+":{"+"\"content\""+":\""+byteString+"\"}"
 			+"}";
 
-		Debug.Log (jsson);
-		//Debug.Log (rootNode.ToString ());
 
 		UnityWebRequest request = UnityWebRequest.Post (apiURL, "");
 
-		request.uploadHandler = new UploadHandlerRaw (System.Text.Encoding.UTF8.GetBytes (jsson));
+		request.uploadHandler = new UploadHandlerRaw (System.Text.Encoding.UTF8.GetBytes (JSONObject));
 
 		request.SetRequestHeader ("Content-Type", "application/json");
 
@@ -353,7 +335,9 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 		StopAllCoroutines ();
 		recording = false;
 		uploading = false;
-		recordingButton.SetActive (false);
+		if (recordingButton) {
+			recordingButton.SetActive (false);
+		}
 		Microphone.End(null);
 	}
 }

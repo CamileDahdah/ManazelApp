@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour {
 	public List<GameObject> panels;
 	private Dictionary<string, GameObject> panelsDictionary = new Dictionary<string, GameObject>();
 	public string currentPanelString = "";
-	public RectTransform referenceRight, referenceLeft;
+	public RectTransform referenceRight, referenceLeft, referenceDown;
 	GameObject currentPanel = null;
 	public float panelAnimationSpeed;
 
@@ -69,6 +69,10 @@ public class UIManager : MonoBehaviour {
 
 	public void MovePanelLeft(GameState.State panelState){
 		MovePanel (panelState, referenceLeft);
+	}
+
+	public void MovePanelUp(GameState.State panelState){
+		MovePanel (panelState, referenceDown);
 	}
 
 	private void MovePanel(GameState.State panelState, RectTransform direction){

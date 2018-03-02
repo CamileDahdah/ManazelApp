@@ -6,7 +6,12 @@ using UnityEngine.UI;
 public class HUDPanel : MonoBehaviour {
 
 	public Button homeButton;
+	public GameObject scoreText;
 
+	void OnEnable(){
+		scoreText.GetComponent<Text> ().text = ScoreManager.instance.GetScore () + "/21";
+
+	}
 
 
 	void Start () {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using ArabicSupport;
 
 public class ObjectPanel : MonoBehaviour {
 
@@ -157,10 +158,17 @@ public class ObjectPanel : MonoBehaviour {
 			textHolderGameobject.GetComponent<Image> ().sprite = correctPlaceHolder;
 			youSaidGameobject.GetComponent<Text> ().color = Color.white;
 			youSaidGameobject.GetComponent<Text> ().text = "correct";
+			ScoreManager.instance.IncrementScore ();
+			ReadJSON.instance.HandleCurrentCorrectObject ();
 			actualText.text = actualText.text.Replace("02dfa5", "FFDD68FF");
 
 		} else {
-			ArabicText.instance.speechTextUI.text = ArabicText.instance.theWord;
+			if (ArabicText.instance.speechTextUI.text != "") {
+				ArabicText.instance.speechTextUI.text = ArabicText.instance.theWord;
+			} else {
+				ArabicText.instance.speechTextUI.text = ArabicFixer.Fix (ArabicText.instance.theWord, true, true);
+			}
+
 			background.sprite = failPanel;
 			textHolderGameobject.GetComponent<Image> ().sprite = failPlaceHolder;
 			youSaidGameobject.GetComponent<Text> ().color = Color.white;

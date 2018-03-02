@@ -9,6 +9,23 @@ public class LevelPanel : MonoBehaviour {
 	public GameObject level1, play, previous;
 	public Color highlightedColor;
 	public GameObject XButton;
+	public GameObject scoreText;
+
+
+	void OnEnable(){
+		
+		if (GameState.instance.GetFirstTime()) {
+			XButton.SetActive (false);
+			play.GetComponentInChildren<Text>().text = "Play";
+		} else {
+			XButton.SetActive (true);
+			play.GetComponentInChildren<Text>().text = "Resume";
+		}
+
+		scoreText.GetComponent<Text> ().text = ScoreManager.instance.GetScore () + "/21";
+
+	}
+
 
 	void Start () {
 		
@@ -29,18 +46,6 @@ public class LevelPanel : MonoBehaviour {
 			UIManager.instance.EnableCurrentPanel (GameState.State.HUDPanel);
 		});
 	
-	}
-
-	void OnEnable(){
-
-		if (GameState.instance.GetFirstTime()) {
-			XButton.SetActive (false);
-			play.GetComponentInChildren<Text>().text = "Play";
-		} else {
-			XButton.SetActive (true);
-			play.GetComponentInChildren<Text>().text = "Resume";
-		}
-
 	}
 
 }

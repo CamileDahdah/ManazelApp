@@ -90,8 +90,9 @@ public class ArabicText : MonoBehaviour {
 
 							if (theWord [i1] == speechword [j2]) { 
 
-								letterCounter += 100f / speechword.Length;
+								letterCounter += Mathf.Min(100f / speechword.Length, 100f / theWord.Length);
 
+								
 								if (isFirstIndex) {
 									firstIndex = j2;
 									isFirstIndex = false;
@@ -128,7 +129,7 @@ public class ArabicText : MonoBehaviour {
 				}
 
 				finalText = speechword;
-				//finalText = ArabicFixer.Fix(finalText, true, true);
+
 				//change Color
 				if (colorLastIndex > colorFirstIndex) {
 					finalText = finalText.Insert (colorLastIndex + 1, "</color>");
@@ -141,14 +142,17 @@ public class ArabicText : MonoBehaviour {
 			Debug.Log (speechText);
 
 			scoreText.text = "Score: " + theLetterCounter;
-			//return theLetterCounter;
+
 			speechTextUI.text =  speechText;
 
 		
+			Debug.Log ("Current Accuracy: " + GameState.instance.GetAccuracy ());
+			Debug.Log ("Score (LetterCounter): " + theLetterCounter);
 
-			if (theLetterCounter >= 100) {
+			if ( theLetterCounter >= GameState.instance.GetAccuracy() ) {
 				correct = true;
 				CorrectAnswer ();
+
 			} else {
 				WrongAnswer ();
 			}
@@ -166,14 +170,26 @@ public class ArabicText : MonoBehaviour {
 	}
 
 	public void PopupObject(string id){
-		GoogleVoiceSpeech.instance.enabled = false;
-		StopAllCoroutines ();
-		ResetState ();
-		ObjectPanel.instance.AnimateSequence (id);
-		theWord = ReadJSON.instance.GetObjectData(id).lbArabicWord;
-		audioSource.clip = whatIsThisClip1;
-		audioSource.Play ();
-		StartCoroutine ("ActivateGoogleVoice");
+
+		//already visited object
+		if (ReadJSON.instance.GetObjectData(id) != null) {
+			
+			theWord = ReadJSON.instance.GetObjectData(id).lbArabicWord;
+
+			UIManager.instance.MovePanelUp (GameState.State.objectPanel);
+			Debug.Log (id);
+
+			GoogleVoiceSpeech.instance.enabled = false;
+			StopAllCoroutines ();
+			ResetState ();
+			ObjectPanel.instance.AnimateSequence (id);
+
+			audioSource.clip = whatIsThisClip1;
+			audioSource.Play ();
+			StartCoroutine ("ActivateGoogleVoice");
+		} else {
+			UIManager.instance.MovePanelUp (GameState.State.greenPopupPanel);
+		}
 	}
 
 	void CorrectAnswer(){

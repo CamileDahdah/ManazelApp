@@ -8,6 +8,7 @@ public class ObjectData {
 	public string id;
 	public string lbArabicWord;
 	public string saudiArabicWord;
+	public bool visited;
 }
 
 [System.Serializable]

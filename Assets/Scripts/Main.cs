@@ -132,7 +132,8 @@ public class Main : MonoBehaviour {
 		mainMaterial.mainTexture = texture;
 	}
 
-	float transitionSpeed = 2.5f;
+
+	float animationSpeed = 1 / 0.15f;
 
 	IEnumerator TransitionAnimation(){
 
@@ -150,10 +151,10 @@ public class Main : MonoBehaviour {
 		while (Vector3.Distance(cubeTransition.transform.position, gameObject.transform.position) > 0) {
 			
 			cubeTransition.transform.position = Vector3.MoveTowards 
-				(cubeTransition.transform.position, gameObject.transform.position, Time.deltaTime * transitionSpeed);
+				(cubeTransition.transform.position, gameObject.transform.position, Time.deltaTime * animationSpeed);
 			
 			cubeTransitionMaterial.SetColor("_Color", new Color (cubeTransitionColor.r, cubeTransitionColor.g, cubeTransitionColor.b, 
-				Mathf.MoveTowards(cubeTransitionMaterial.GetColor("_Color").a, 1, Time.deltaTime * transitionSpeed)));
+				Mathf.MoveTowards(cubeTransitionMaterial.GetColor("_Color").a, 1, Time.deltaTime * animationSpeed)));
 			
 			yield return null;
 		}

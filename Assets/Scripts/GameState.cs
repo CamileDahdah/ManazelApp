@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameState : MonoBehaviour {
 
-	public enum State {HUDPanel = 0, objectPanel = 1, languagePanel = 2, settingsPanel, levelPanel}
+	public enum State { HUDPanel = 0, objectPanel = 1, languagePanel = 2, settingsPanel, levelPanel, greenPopupPanel }
 
 	private static State currentState;
 
@@ -12,9 +12,10 @@ public class GameState : MonoBehaviour {
 
 	public static State CurrentState{
 		
-		get{return currentState; }
+		get{ return currentState; }
 
 		set{currentState = value;
+			
 			if (UIManager.instance) {
 				UIManager.instance.currentPanelString = value.ToString ().ToLower (); 
 			}
@@ -25,8 +26,6 @@ public class GameState : MonoBehaviour {
 			}
 		}
 	}
-
-	public bool firstTimeDebug;
 
 	private bool firstTime;
 
@@ -42,26 +41,24 @@ public class GameState : MonoBehaviour {
 			Destroy (this);
 		}
 
-		if (firstTimeDebug) {
-			PlayerPrefs.SetInt ("firstTime", 1);
-			PlayerPrefs.Save ();
-		}
-
 		accuracy = PlayerPrefs.GetFloat ("accuracySlider", 80);
 
-		if (PlayerPrefs.GetInt ("firstTime") > 0) {
+		if (PlayerPrefs.GetInt ("firstTime", 1) > 0) {
 			firstTime = true;
 		} else {
 			firstTime = false;
 		}
+
 	}
 
 	void Start(){
+		
 		if (firstTime) {
 			UIManager.instance.EnableCurrentPanel (State.languagePanel);
 		} else {
 			UIManager.instance.EnableCurrentPanel (State.HUDPanel);
 		}
+
 	}
 
 	public void SetLanguage(string newLanguage){
@@ -82,11 +79,13 @@ public class GameState : MonoBehaviour {
 	}
 
 	public void SetFirstTime(int newFirsTime){
+		
 		if (newFirsTime > 0) {
 			firstTime = true;
 		} else {
 			firstTime = false;
 		}
+
 		PlayerPrefs.SetInt ("firstTime", newFirsTime);
 		PlayerPrefs.Save ();
 	}

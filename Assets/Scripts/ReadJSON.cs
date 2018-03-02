@@ -12,6 +12,7 @@ public class ReadJSON : MonoBehaviour {
 	public string currentID = "";
 	public int currentOrder = 0;
 	int length = 0;
+	string filePath;
 
 	void Awake () {
 		
@@ -21,17 +22,30 @@ public class ReadJSON : MonoBehaviour {
 			Destroy (this);
 		}
 
+		filePath = Path.Combine (Application.streamingAssetsPath + "/JSON", fileName);
 		LoadObjectsData ();
 	}
 
 	private void LoadObjectsData(){
 
-		string filePath = Path.Combine (Application.streamingAssetsPath + "/JSON", fileName);
-
 		if (File.Exists (filePath)) {
 
-			string dataAsJson = File.ReadAllText (filePath); 
+			string dataAsJson; 
+
+			if (Application.platform == RuntimePlatform.Android) {
+				
+				WWW reader = new WWW (filePath);
+				while (!reader.isDone) {
+				}
+
+				dataAsJson = reader.text;
+
+			} else {
+				
+				dataAsJson = File.ReadAllText (filePath); 
 	
+			}
+
 			objectsData = JsonUtility.FromJson<ObjectsData> (dataAsJson);
 			loadedData = objectsData.objects;
 			length = loadedData.Count;
@@ -47,8 +61,15 @@ public class ReadJSON : MonoBehaviour {
 		foreach(ObjectData objectData in loadedData){
 			
 			if (objectData.id == id) {
-				currentOrder = iteration;
-				return objectData;
+				
+				if (!objectData.visited) {
+					
+					currentOrder = iteration;
+					return objectData;
+
+				} else {
+					return null;
+				}
 			}
 			iteration++;
 		}
@@ -56,12 +77,16 @@ public class ReadJSON : MonoBehaviour {
 	}
 
 	public ObjectData GetNextObjectData(){
+		
+		do{
+			
+			if (currentOrder + 1 >= length) {
+				currentOrder = 0; 
+			} else {
+				currentOrder++;
+			}
 
-		if (currentOrder + 1 >= length) {
-			currentOrder = 0; 
-		} else {
-			currentOrder++;
-		}
+		}while(CheckCurrentObject());
 
 		return loadedData[currentOrder];
 
@@ -69,15 +94,52 @@ public class ReadJSON : MonoBehaviour {
 
 	public ObjectData GetPreviousObjectData(){
 
-		if (currentOrder - 1 < 0) {
-			currentOrder = length - 1; 
-		} else {
-			currentOrder--;
-		}
+		do{
+			if (currentOrder - 1 < 0) {
+				currentOrder = length - 1; 
+			} else {
+				currentOrder--;
+			}
+		}while(CheckCurrentObject());
 
 		return loadedData[currentOrder];
 
 	}
 
+	public void HandleCurrentCorrectObject(){
+
+		if (File.Exists (filePath)) {
+
+			loadedData[currentOrder].visited = true;
+			string JSONResult = JsonUtility.ToJson (objectsData, true);
+
+			File.WriteAllText (filePath, JSONResult);
+
+		}
+			
+
+	}
+
+	public bool CheckCurrentObject(){
+		return loadedData [currentOrder].visited;
+	}
+
+	public void ResetAll(){
+
+		foreach(ObjectData objectData in loadedData){
+			
+			objectData.visited = false;
+
+		}
+
+		if (File.Exists (filePath)) {
+
+		
+			string JSONResult = JsonUtility.ToJson (objectsData, true);
+
+			File.WriteAllText (filePath, JSONResult);
+
+		}
+	}
 
 }

@@ -145,9 +145,6 @@ public class RayCast : MonoBehaviour {
 
 	void ClickObject(string objectID){
 
-		UIManager.instance.MovePanelUp (GameState.State.objectPanel);
-		Debug.Log (objectID);
-
 		ArabicText.instance.PopupObject (objectID);
 
 	}

@@ -27,6 +27,12 @@ public class SettingsPanel : MonoBehaviour {
 
 		InitializeToggles ();
 
+		if (PlayerPrefs.GetInt ("Mute", 0) > 0) {
+			DisableSound (true);
+		} else {
+			DisableSound (false);
+		}
+			
 		audioToggleButton.onClick.AddListener (delegate {
 			AudioClick();
 
@@ -112,10 +118,12 @@ public class SettingsPanel : MonoBehaviour {
 		
 		if (GetAudioOn() > 0) {
 			audioToggleAnim.Play (disabled);
+			DisableSound (true);
 			SetAudioOn(0);
 
 		} else {
 			audioToggleAnim.Play (enabled);
+			DisableSound (false);
 			SetAudioOn(1);
 		}
 
@@ -135,6 +143,9 @@ public class SettingsPanel : MonoBehaviour {
 	}
 
 	void HelpClick(){
+		//!TODO 
+		PlayerPrefs.DeleteAll ();
+		ReadJSON.instance.ResetAll ();
 
 		if (GetHelpOn() > 0) {
 			helpToggleAnim.Play (disabled);
@@ -183,6 +194,21 @@ public class SettingsPanel : MonoBehaviour {
 		return audioOn;
 	}
 
+	void DisableSound(bool disable){
+		
+		if (disable) {
+			PlayerPrefs.SetInt ("Mute", 1);
+		} else {
+			PlayerPrefs.SetInt ("Mute", 0);
+		}
+		PlayerPrefs.Save ();
 
+		foreach (AudioSource audioSource in GameObject.FindObjectsOfType<AudioSource>()) {
+			
+			if (audioSource.tag != "Speech") {
+				audioSource.mute = disable;
+			}
+		}
+	}
 
 }

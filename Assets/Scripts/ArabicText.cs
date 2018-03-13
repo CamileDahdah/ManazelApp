@@ -39,8 +39,8 @@ public class ArabicText : MonoBehaviour {
 		if (speechText != "") {
 
 
-			speechText = ArabicFixer.Fix(speechText, true, true);
-			theWord = ArabicFixer.Fix (theWord, true, true);
+			//speechText = ArabicFixer.Fix(speechText, true, true);
+			//theWord = ArabicFixer.Fix (theWord, true, true);
 
 			string[] speechwords = speechText.Split (' ');
 
@@ -52,12 +52,14 @@ public class ArabicText : MonoBehaviour {
 
 			string finalText = "";
 
+			List<int> highlightIndexes = new List<int>();
+
 			foreach (string speechword in speechwords) {
 
 				wordLength = speechword.Length;
 
 				int firstIndex = 0, lastIndex = 0;
-				int colorFirstIndex = 0, colorLastIndex = 0;
+
 				int colorLength = 0;
 
 				//foreach (KeyValuePair<string, float> correctWord in correctWords) {
@@ -85,38 +87,35 @@ public class ArabicText : MonoBehaviour {
 
 						isFirstIndex = true;
 
-						for( ; i1 <= i2; i1++){
+						List<int> tempIndexes = new List<int>();
 
+						for( ; i1 <= i2; i1++){
 
 							if (theWord [i1] == speechword [j2]) { 
 
-								letterCounter += Mathf.Min(100f / speechword.Length, 100f / theWord.Length);
-
-								
-								if (isFirstIndex) {
-									firstIndex = j2;
-									isFirstIndex = false;
-
-								} else {
-									lastIndex = j2;
-								}
+								letterCounter += Mathf.Min (100f / speechword.Length, 100f / theWord.Length);
+								tempIndexes.Add (j2);
+								Debug.Log ("!!! " + theWord[i1]);
+								Debug.Log ("!!! " + speechword[j2]);
 							}
-
-
+							
 							j2++;
 						}
 
-						if (lastIndex - firstIndex > colorLength) { //check best sequence
-							colorLength = lastIndex - firstIndex;
-							colorFirstIndex = firstIndex;
-							colorLastIndex = lastIndex;
-						}
-
 						if (letterCounter > theLetterCounter) { 
+							
 							theLetterCounter = letterCounter;
-						}
 
-					//}
+							Debug.Log ("!! highlightIndexes " + highlightIndexes.Count);
+							Debug.Log ("!! tempIndexes "+ tempIndexes.Count);
+
+							highlightIndexes = tempIndexes;
+
+							Debug.Log ("highlightIndexes " + highlightIndexes.Count);
+							Debug.Log ("tempIndexes "+ tempIndexes.Count);
+
+						}
+						
 
 					//word by word
 					/*if (speechword == correctWord.Key) {
@@ -128,15 +127,22 @@ public class ArabicText : MonoBehaviour {
 					}*/
 				}
 
-				finalText = speechword;
+				Debug.Log (speechText);
 
+				finalText = ArabicFixer.Fix(speechText, true, true);
+
+				int size = speechword.Length;
+	
 				//change Color
-				if (colorLastIndex > colorFirstIndex) {
-					finalText = finalText.Insert (colorLastIndex + 1, "</color>");
-					finalText = finalText.Insert (colorFirstIndex, "<color=#02dfa5>");
+				for ( int i = 0; i < highlightIndexes.Count; i++ ) {
+					Debug.Log (highlightIndexes[i]);
+					finalText = finalText.Insert ( (size - (highlightIndexes[i])) , "</color>");
+					finalText = finalText.Insert ( (size - (highlightIndexes[i])) - 1, "<color=#02dfa5>");
 				}
 
-				speechText = speechText.Replace (speechword, finalText);
+				Debug.Log (finalText);
+
+				speechText = finalText;
 
 			}
 			Debug.Log (speechText);
@@ -174,19 +180,23 @@ public class ArabicText : MonoBehaviour {
 		//already visited object
 		if (ReadJSON.instance.GetObjectData(id) != null) {
 			
-			theWord = ReadJSON.instance.GetObjectData(id).lbArabicWord;
+			theWord = ReadJSON.instance.GetObjectData(id).saudiArabicWord;
 
 			UIManager.instance.MovePanelUp (GameState.State.objectPanel);
-			Debug.Log (id);
+			//Debug.Log (id);
 
 			GoogleVoiceSpeech.instance.enabled = false;
 			StopAllCoroutines ();
 			ResetState ();
+
 			ObjectPanel.instance.AnimateSequence (id);
 
 			audioSource.clip = whatIsThisClip1;
 			audioSource.Play ();
 			StartCoroutine ("ActivateGoogleVoice");
+
+			
+
 		} else {
 			UIManager.instance.MovePanelUp (GameState.State.greenPopupPanel);
 		}
@@ -221,7 +231,7 @@ public class ArabicText : MonoBehaviour {
 		StopAllCoroutines ();
 		ResetState ();
 		ObjectPanel.instance.AnimateSequence (objectData.id);
-		theWord = objectData.lbArabicWord;
+		theWord = objectData.saudiArabicWord;
 		audioSource.clip = whatIsThisClip1;
 		audioSource.Play ();
 		StartCoroutine ("ActivateGoogleVoice");
@@ -233,7 +243,7 @@ public class ArabicText : MonoBehaviour {
 		StopAllCoroutines ();
 		ResetState ();
 		ObjectPanel.instance.AnimateSequence (objectData.id);
-		theWord = objectData.lbArabicWord;
+		theWord = objectData.saudiArabicWord;
 		audioSource.clip = whatIsThisClip1;
 		audioSource.Play ();
 		StartCoroutine ("ActivateGoogleVoice");

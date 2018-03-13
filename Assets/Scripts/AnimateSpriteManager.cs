@@ -25,7 +25,7 @@ public class AnimateSpriteManager : MonoBehaviour {
 	}
 
 	void OnEnable(){
-		GameState.CurrentState = GameState.State.objectPanel;
+		//GameState.CurrentState = GameState.State.objectPanel;
 	}
 
 	public void AnimateSequence(string location){

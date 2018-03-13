@@ -21,6 +21,8 @@ public class ObjectPanel : MonoBehaviour {
 	public Text wrongWord, actualText;
 	public GameObject shadyBackground;
 	public Color correctTextColor;
+	public List<Sprite> ballonSequence, coinSequence;
+	public GameObject ballonGameobject, coinGameObject;
 
 	void Awake(){
 		
@@ -82,36 +84,45 @@ public class ObjectPanel : MonoBehaviour {
 
 		//Load All sprites
 		StopAllCoroutines ();
+		spriteSheetImage.enabled = false;
 
-		Sprite[] spriteSheetArray = Resources.LoadAll <Sprite> (spriteResourceLocation + "/" + location);
-		if (spriteSheetArray != null && spriteSheetArray.Length > 0) {
-
-			spriteSheet.Clear ();
-			spriteSheet.AddRange (spriteSheetArray);
-			StartCoroutine ("Animate");
-		} else {
-			Debug.Log ("Resource " + spriteResourceLocation + "/" + location + "Not Found!");
-		}
+		StartCoroutine ("Animate", location);
 	}
 
-	IEnumerator Animate(){
-		int size = spriteSheet.Count;
-		int current = 0;
+	IEnumerator Animate(string location){
 
-		while (true) {
+		yield return new WaitUntil (() => UIManager.instance.moveUIDone == true && UIManager.instance.blurEffect == true);
 
-			while(current < size){
-				spriteSheetImage.sprite = spriteSheet [current++];
-				yield return new WaitForSeconds (frameRate);
+		Sprite[] spriteSheetArray = Resources.LoadAll <Sprite> (spriteResourceLocation + "/" + location);
+
+		if (spriteSheetArray != null && spriteSheetArray.Length > 0) {
+			spriteSheetImage.enabled = true;
+			spriteSheet.Clear ();
+			spriteSheet.AddRange (spriteSheetArray);
+
+			int size = spriteSheet.Count;
+			int current = 0;
+
+			while (true) {
+
+				while (current < size) {
+					spriteSheetImage.sprite = spriteSheet [current++];
+					yield return new WaitForSeconds (frameRate);
+				}
+
+				while (current > 0) {
+					spriteSheetImage.sprite = spriteSheet [--current];
+					yield return new WaitForSeconds (frameRate);
+				}
+				yield return null;
+
 			}
-
-			while(current > 0){
-				spriteSheetImage.sprite = spriteSheet [--current];
-				yield return new WaitForSeconds (frameRate);
-			}
-			yield return null;
-
 		}
+
+		else {
+			Debug.Log ("Resource " + spriteResourceLocation + "/" + location + "Not Found!");
+		}
+
 	}
 
 	public void Loading(){
@@ -149,6 +160,10 @@ public class ObjectPanel : MonoBehaviour {
 			yield return null;
 		}
 
+		if (!correct) {
+			StartCoroutine ("BallonAnimate");
+		}
+
 		yield return new WaitForSeconds (1.5f);
 
 		shadyBackground.SetActive (true);
@@ -161,13 +176,15 @@ public class ObjectPanel : MonoBehaviour {
 			ScoreManager.instance.IncrementScore ();
 			ReadJSON.instance.HandleCurrentCorrectObject ();
 			actualText.text = actualText.text.Replace("02dfa5", "FFDD68FF");
+			StartCoroutine ("AnimateCoin");
 
 		} else {
-			if (ArabicText.instance.speechTextUI.text != "") {
-				ArabicText.instance.speechTextUI.text = ArabicText.instance.theWord;
-			} else {
-				ArabicText.instance.speechTextUI.text = ArabicFixer.Fix (ArabicText.instance.theWord, true, true);
-			}
+			
+			//if (ArabicText.instance.speechTextUI.text != "") {
+			//	ArabicText.instance.speechTextUI.text = ArabicText.instance.theWord;
+			//} else {
+			//	ArabicText.instance.speechTextUI.text = ArabicFixer.Fix (ArabicText.instance.theWord, true, true);
+			//}
 
 			background.sprite = failPanel;
 			textHolderGameobject.GetComponent<Image> ().sprite = failPlaceHolder;
@@ -187,11 +204,19 @@ public class ObjectPanel : MonoBehaviour {
 		}
 
 		yield return new WaitForSeconds(2f);
-		UIManager.instance.EnableCurrentPanel (GameState.State.HUDPanel);
+
+		if (correct) {
+			UIManager.instance.EnableCurrentPanel (GameState.State.HUDPanel);
+		}
+		else{
+			ArabicText.instance.PopupObject (ReadJSON.instance.currentID);
+		}
+
 			
 	}
 
 	void ResetPanelState (){
+		
 		StopAllCoroutines ();
 		background.sprite = normalPanel;
 		textHolderGameobject.GetComponent<Image>().sprite = normalPlaceHolder;
@@ -199,11 +224,51 @@ public class ObjectPanel : MonoBehaviour {
 		textHolderGameobject.SetActive (false);
 		loadGameObject.SetActive (false);
 		speakGameObject.SetActive (false);
+		coinGameObject.SetActive (false);
+		ballonGameobject.SetActive (false);
 		nextObject.gameObject.SetActive (true);
 		previousObject.gameObject.SetActive (true);
 		xButton.gameObject.SetActive (true);
 		youSaidGameobject.GetComponent<Text> ().color = new Color(214/255f, 216/255f, 203/255f);
 		youSaidGameobject.GetComponent<Text> ().text = "You said";
+
 	}
 
+	IEnumerator BallonAnimate(){
+		
+		yield return new WaitForSeconds (.78f);
+
+		int current = 0;
+
+		ballonGameobject.SetActive (true);
+		ballonGameobject.GetComponent<RectTransform> ().anchoredPosition = initialTextHolderPosition.anchoredPosition;
+			
+		while (current < ballonSequence.Count) {
+			
+			ballonGameobject.GetComponent<Image> ().sprite = ballonSequence [current++];
+			ballonGameobject.GetComponent<RectTransform> ().anchoredPosition = 
+				Vector2.MoveTowards (ballonGameobject.GetComponent<RectTransform> ().anchoredPosition, 
+					textHolderPosition2.anchoredPosition, Time.deltaTime * 650f);
+			yield return new WaitForSeconds(1/45f);
+		}
+
+		ballonGameobject.SetActive (false);
+
+	}
+
+	IEnumerator AnimateCoin(){
+
+		int current = 0;
+
+		coinGameObject.SetActive (true);
+
+		while (current < coinSequence.Count) {
+
+			coinGameObject.GetComponent<Image> ().sprite = coinSequence [current++];
+			yield return new WaitForSeconds(1/45f);
+		}
+
+		coinGameObject.SetActive (false);
+
+	}
 }

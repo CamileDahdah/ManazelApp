@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;     
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class ReadJSON : MonoBehaviour {
 
@@ -12,7 +13,7 @@ public class ReadJSON : MonoBehaviour {
 	public string currentID = "";
 	public int currentOrder = 0;
 	int length = 0;
-	string filePath;
+	string filePath, newFilePath;
 
 	void Awake () {
 		
@@ -22,35 +23,43 @@ public class ReadJSON : MonoBehaviour {
 			Destroy (this);
 		}
 
-		filePath = Path.Combine (Application.streamingAssetsPath + "/JSON", fileName);
-		LoadObjectsData ();
+		filePath = Path.Combine (Application.streamingAssetsPath , fileName);
+		newFilePath = Path.Combine (Application.persistentDataPath , fileName);
+		StartCoroutine("LoadObjectsData");
 	}
 
-	private void LoadObjectsData(){
+	IEnumerator LoadObjectsData(){
 
-		if (File.Exists (filePath)) {
+		string dataAsJson = "";
 
-			string dataAsJson; 
-
+		if (!File.Exists (newFilePath)) {
+			
 			if (Application.platform == RuntimePlatform.Android) {
 				
-				WWW reader = new WWW (filePath);
-				while (!reader.isDone) {
-				}
-
-				dataAsJson = reader.text;
+				UnityWebRequest www = UnityWebRequest.Get (filePath);
+				yield return www.SendWebRequest ();
+				dataAsJson = www.downloadHandler.text;
 
 			} else {
-				
-				dataAsJson = File.ReadAllText (filePath); 
-	
+				dataAsJson = File.ReadAllText (filePath);
 			}
 
-			objectsData = JsonUtility.FromJson<ObjectsData> (dataAsJson);
-			loadedData = objectsData.objects;
-			length = loadedData.Count;
-
+			FileStream file = File.Create (newFilePath);
+			file.Close ();
+			File.WriteAllText (newFilePath, dataAsJson);
+		
+		} else {
+			Debug.Log (newFilePath);
+			dataAsJson = File.ReadAllText (newFilePath); 
+	
 		}
+	
+		objectsData = JsonUtility.FromJson<ObjectsData> (dataAsJson);
+		loadedData = objectsData.objects;
+		length = loadedData.Count;
+
+
+
 	}
 
 	public ObjectData GetObjectData(string id){
@@ -88,6 +97,7 @@ public class ReadJSON : MonoBehaviour {
 
 		}while(CheckCurrentObject());
 
+		currentID = loadedData [currentOrder].id;
 		return loadedData[currentOrder];
 
 	}
@@ -102,21 +112,19 @@ public class ReadJSON : MonoBehaviour {
 			}
 		}while(CheckCurrentObject());
 
+		currentID = loadedData [currentOrder].id;
 		return loadedData[currentOrder];
 
 	}
 
 	public void HandleCurrentCorrectObject(){
 
-		if (File.Exists (filePath)) {
 
-			loadedData[currentOrder].visited = true;
-			string JSONResult = JsonUtility.ToJson (objectsData, true);
+		loadedData[currentOrder].visited = true;
+		string JSONResult = JsonUtility.ToJson (objectsData, true);
 
-			File.WriteAllText (filePath, JSONResult);
+		File.WriteAllText (newFilePath, JSONResult);
 
-		}
-			
 
 	}
 
@@ -131,15 +139,11 @@ public class ReadJSON : MonoBehaviour {
 			objectData.visited = false;
 
 		}
-
-		if (File.Exists (filePath)) {
-
-		
-			string JSONResult = JsonUtility.ToJson (objectsData, true);
-
-			File.WriteAllText (filePath, JSONResult);
-
+			
+		if (File.Exists (newFilePath)) {
+			File.Delete (newFilePath);
 		}
+			
 	}
 
 }

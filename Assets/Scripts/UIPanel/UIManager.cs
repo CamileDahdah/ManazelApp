@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
 
@@ -12,7 +13,8 @@ public class UIManager : MonoBehaviour {
 	public RectTransform referenceRight, referenceLeft, referenceDown;
 	GameObject currentPanel = null;
 	public float panelAnimationSpeed;
-
+	public bool moveUIDone, blurEffect;
+	Image blurImage;
 	void Awake () {
 		
 		if (instance == null) {
@@ -25,11 +27,14 @@ public class UIManager : MonoBehaviour {
 			panelsDictionary.Add (panel.name.ToLower(), panel);
 		}
 
-
+		blurImage = panelsDictionary ["blurpanel"].GetComponent<Image> ();
+	
 	}
 
 	void Start(){
-		
+
+		moveUIDone = false;
+
 		currentPanelString = GameState.CurrentState.ToString().ToLower();
 
 	}
@@ -76,6 +81,7 @@ public class UIManager : MonoBehaviour {
 	}
 
 	private void MovePanel(GameState.State panelState, RectTransform direction){
+		moveUIDone = false;
 		EnableCurrentPanel (panelState);
 		StartCoroutine ("AnimatePanel", direction);
 	}
@@ -98,6 +104,35 @@ public class UIManager : MonoBehaviour {
 		}
 			
 		eventSystem.enabled = true;
+		moveUIDone = true;
+	}
+
+	public void EnableBlur(bool enable){
+		
+		blurEffect = false;
+
+		StopCoroutine ("Blur");
+		StartCoroutine ("Blur", enable);
+
+	}
+
+	IEnumerator Blur(bool enable){
+		
+		float alpha;
+
+		if (enable) {
+			alpha = 206 / 255f;
+		} else {
+			alpha = 0f;
+		}
+
+		while (blurImage.color.a != alpha) {
+			blurImage.color = new Color( blurImage.color.r, 
+				blurImage.color.g, blurImage.color.b, Mathf.MoveTowards (blurImage.color.a, alpha, Time.deltaTime * 1.5f) );
+			yield return null;
+		}
+
+		blurEffect = true;
 
 	}
 }

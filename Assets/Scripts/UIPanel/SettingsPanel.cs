@@ -83,6 +83,7 @@ public class SettingsPanel : MonoBehaviour {
 
 	public void DeselectSlider(){
 		PlayerPrefs.SetFloat ("accuracySlider", slider.value);
+		GameState.instance.SetAccuracy (slider.value);
 		PlayerPrefs.Save ();
 		Debug.Log ("Accuracy Saved");
 	}

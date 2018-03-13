@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameState : MonoBehaviour {
 
-	public enum State { HUDPanel = 0, objectPanel = 1, languagePanel = 2, settingsPanel, levelPanel, greenPopupPanel }
+	public enum State { HUDPanel = 0, objectPanel = 1, languagePanel = 2, settingsPanel, levelPanel, greenPopupPanel, blurPanel }
 
 	private static State currentState;
 
@@ -12,9 +12,12 @@ public class GameState : MonoBehaviour {
 
 	public static State CurrentState{
 		
-		get{ return currentState; }
+		get{ 
+			return currentState; 
+		}
 
-		set{currentState = value;
+		set{
+			currentState = value;
 			
 			if (UIManager.instance) {
 				UIManager.instance.currentPanelString = value.ToString ().ToLower (); 
@@ -24,6 +27,13 @@ public class GameState : MonoBehaviour {
 				PlayerPrefs.Save ();
 
 			}
+
+			if(currentState == State.HUDPanel){
+				UIManager.instance.EnableBlur (false);
+			}else{
+				UIManager.instance.EnableBlur (true);
+			}
+
 		}
 	}
 

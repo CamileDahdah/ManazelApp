@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4645311969419944}
   - component: {fileID: 65747097306878864}
+  - component: {fileID: 95107751285264958}
   m_Layer: 8
   m_Name: OriginalHotspot
   m_TagString: Untagged
@@ -51,7 +52,7 @@ Transform:
   m_GameObject: {fileID: 1116346477647554}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.23875736, y: -0.1910059, z: 2.3875735}
+  m_LocalScale: {x: 0.02, y: -0.02, z: 0.02}
   m_Children:
   - {fileID: 4903009305236320}
   m_Father: {fileID: 0}
@@ -63,13 +64,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1979872195647558}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.1, z: 0.1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3.55, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4645311969419944}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &65747097306878864
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -80,8 +81,25 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.304345, y: 0.9358273, z: 0.013906002}
-  m_Center: {x: 0.002746176, y: 0.3679128, z: 0.0045552477}
+  m_Size: {x: 6.8999996, y: 11.608013, z: 0.013906002}
+  m_Center: {x: 0.002746284, y: 3.441462, z: 0.0045552473}
+--- !u!95 &95107751285264958
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1116346477647554}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3dfcbe852f53f4a2c85cd00709fc28e0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!212 &212216524047943700
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -116,7 +134,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 140231121be1f4d8dbed91754b2115ea, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1c60f518e73f64b2eb4075001afe949e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

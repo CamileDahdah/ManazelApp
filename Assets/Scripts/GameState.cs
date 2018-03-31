@@ -10,6 +10,9 @@ public class GameState : MonoBehaviour {
 
 	private float accuracy;
 
+	//TODO Handle newly selected Levels (not just level 1)
+	int currentLevel = 1;
+
 	public static State CurrentState{
 		
 		get{ 
@@ -18,10 +21,9 @@ public class GameState : MonoBehaviour {
 
 		set{
 			currentState = value;
-			
-			if (UIManager.instance) {
-				UIManager.instance.currentPanelString = value.ToString ().ToLower (); 
-			}
+
+			UIManager.instance.currentPanelString = value.ToString ().ToLower (); 
+
 			if(currentState == State.languagePanel || currentState == State.settingsPanel ||  currentState == State.levelPanel){
 				PlayerPrefs.SetInt ( "activeMainPanel" , (int) value);
 				PlayerPrefs.Save ();
@@ -29,14 +31,15 @@ public class GameState : MonoBehaviour {
 			}
 
 			if(currentState == State.HUDPanel){
-				
+				InputManager.instance.EnableInput ();
 				UIManager.instance.EnableBlur (false);
 
 			}else{
 				
 				UIManager.instance.EnableBlur (true);
-
+				InputManager.instance.DisableInput ();
 			}
+				
 
 		}
 	}
@@ -106,6 +109,16 @@ public class GameState : MonoBehaviour {
 
 	public bool GetFirstTime(){
 		return firstTime;
+	}
+
+	public int GetCurrentLevel(){
+
+		return currentLevel;
+	}
+
+	public void SetCurrentLevel(int level){
+
+		currentLevel = level;
 	}
 
 }

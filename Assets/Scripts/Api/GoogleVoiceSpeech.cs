@@ -15,8 +15,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 	public GameObject recordingButton;
 
-	float minimumLevel = 10f;
-	private ArabicText arabicText;
+	private ArabicTextHandler arabicTextHandler;
 
 
 	struct ClipData
@@ -41,7 +40,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 	public string apiKey;
 	bool recording = false, uploading = false;
-	string apiURL, apiBaseUrl = "https://speech.googleapis.com/v1/speech:recognize?key="; 
+	string apiCompleteURL, apiBaseUrl = "https://speech.googleapis.com/v1/speech:recognize?key="; 
 
 	public static GoogleVoiceSpeech instance;
 
@@ -53,7 +52,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 			Destroy (this);
 		}
 
-		apiURL = apiBaseUrl + apiKey;
+		apiCompleteURL = apiBaseUrl + apiKey;
 
 		//TODO should check if microphone is available every time we use microphone (not in Awake function)
 		//TODO popup error message when necessary
@@ -63,7 +62,8 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 			micConnected = true;
 
-			//Get the default microphone recording capabilities
+			//TODO check microphone capabilities and adjust default frequency if necessary
+
 			//Microphone.GetDeviceCaps (null, out minFreq, out maxFreq);
 
 			goAudioSource = this.GetComponent<AudioSource> ();
@@ -79,15 +79,15 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 
 	void OnEnable(){
-		RecordClick ();
+		StartRecording ();
 	}
 
 	void Start (){
-		arabicText = ArabicText.instance;
+		arabicTextHandler = ArabicTextHandler.instance;
 	}
 
-	//onClick
-	public void RecordClick(){
+
+	public void StartRecording(){
 		
 		if (micConnected) {
 			
@@ -105,7 +105,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 			} else {
 				if (!uploading) {
-					string filePath = Record ();
+					string filePath = FinishRecording ();
 					StartCoroutine ("HttpUploadFile", filePath);
 				
 				}
@@ -117,7 +117,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 	public void StopRecording(){
 		
 		if (!uploading) {
-			string filePath = Record ();
+			string filePath = FinishRecording ();
 			StartCoroutine ("HttpUploadFile", filePath);
 
 		}
@@ -135,7 +135,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 		//convert audio bitstream to 64 bit encoding
 		string byteString = Convert.ToBase64String(File.ReadAllBytes (filePath));
 
-		// !NOTE: I didn't use JSONClass because it was super slow to convert data to string using the .ToString() method
+		//NOTE: I didn't use JSONClass because it was super slow to convert data to string using the .ToString() method
 		// this is the raw data payload of the API call
 		string JSONObject = 
 			
@@ -162,11 +162,12 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 		"}";
 
 		//Debug.Log (JSONObject);
-		UnityWebRequest request = UnityWebRequest.Post (apiURL, "");
+		UnityWebRequest request = UnityWebRequest.Post (apiCompleteURL, "");
 
 		request.uploadHandler = new UploadHandlerRaw (System.Text.Encoding.UTF8.GetBytes (JSONObject));
 
 		request.SetRequestHeader ("Content-Type", "application/json");
+
 		// if request time passes x seconds then most probably no internet connection
 		request.timeout = 9;
 
@@ -185,6 +186,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 			//Debug.Log (response);
 
 			if (response != "") {
+				
 				var jsonresponse = JSON.Parse (response);
 
 				Debug.Log ("response string: " + response);
@@ -197,7 +199,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 				Debug.Log ("transcript string: " + transcripts);
 
-				arabicText.DetectArabicWords (transcripts);
+				arabicTextHandler.CompareArabicWords (transcripts);
 			}
 		}
 
@@ -211,7 +213,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 	}
 
 
-	string Record (){
+	string FinishRecording (){
 		
 		uploading = true;
 
@@ -224,9 +226,8 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 		/// Trim Audio
 		int lastTime = Microphone.GetPosition(null); 
 
-		Microphone.End(null);
-
 		if (lastTime > 0) {
+			
 			float[] samples = new float[goAudioSource.clip.samples]; 
 
 			goAudioSource.clip.GetData (samples, 0);
@@ -238,6 +239,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 			goAudioSource.clip = AudioClip.Create ("playRecordClip", ClipSamples.Length, 1, frequency, false, false);
 			goAudioSource.clip.SetData (ClipSamples, 0);
 		}
+
 
 		//Stop the audio recording
 		Microphone.End (null);
@@ -282,6 +284,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 	float maxTimerThreshold = 20f, refreshRate = .05f, soundSum;
 	int iteration, lastTime;
 
+	//checks when user stops speaking and automatically uploads audio to server
 	IEnumerator IsSpeaking(){
 
 		spokeOnce = false;
@@ -300,6 +303,8 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 		goAudioSource.Play();
 
+		//algortihm: first checks sound ambiance level in the first .15 seconds based on three iterations
+		// and then computes sound threshold to detect when the user is speaking
 		while (recording) {
 			
 			//wait for 20 seconds if no one speaks
@@ -311,7 +316,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 				spokeOnce = true;
 			}
-
+				
 			//compute final threshhold
 			if (iteration == 3) {
 				soundThreshold += (soundAverage / iteration) / 2f;
@@ -331,10 +336,10 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 			soundAverage += soundSum;
 //			Debug.Log (soundThreshold);
-			arabicText.scoreText.text = "" + soundSum;
-			arabicText.limitText.text = "" + soundThreshold;
+			arabicTextHandler.scoreText.text = "" + soundSum;
+			arabicTextHandler.limitText.text = "" + soundThreshold;
 
-			//if avg sound is computed
+			//if average sound is computed
 			if (iteration >= 3) {
 				
 				if (soundSum < soundThreshold) {
@@ -365,7 +370,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 					}
 				} else if (speakingCounter < - counterThreshold && !uploading) {
 				
-					string filePath = Record ();
+					string filePath = FinishRecording ();
 					StartCoroutine ("HttpUploadFile", filePath);
 
 				}
@@ -379,6 +384,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 	
 	}
 
+	//reset state
 	void OnDisable(){
 		
 		StopAllCoroutines ();

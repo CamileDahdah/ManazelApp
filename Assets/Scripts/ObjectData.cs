@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
+//object data JSON fields
 
 [System.Serializable]
 public class ObjectData {

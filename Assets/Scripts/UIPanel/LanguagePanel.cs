@@ -12,10 +12,7 @@ public class LanguagePanel : MonoBehaviour {
 	public Sprite selectedButtonSprite, unselectedButtonSprite;
 	public GameObject nextButton;
 
-
-	void OnEnable(){
-		GameState.CurrentState = GameState.State.languagePanel;
-	}
+	//TODO Add multiple languages support (english, arabic, etc.)
 
 	void Start () {
 
@@ -43,6 +40,7 @@ public class LanguagePanel : MonoBehaviour {
 				buttonID++;
 			}
 		}
+
 	}
 	
 	void SelectLanguage(string language, int buttonID){

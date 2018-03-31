@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Animate object spritesheet located in the resources folder based on its ID
+//Animate object spritesheet located in the resources folder based on object's ID
 
 public class AnimateSpriteManager : MonoBehaviour {
 	
@@ -27,6 +27,7 @@ public class AnimateSpriteManager : MonoBehaviour {
 		xButton.onClick.AddListener ( () =>  XButtonClick() );
 	}
 
+
 	public void AnimateSequence(string location){
 
 		//Load All sprites
@@ -35,7 +36,7 @@ public class AnimateSpriteManager : MonoBehaviour {
 
 		StartCoroutine ("Animate");
 	}
-
+		
 	IEnumerator Animate(){
 		int size = spriteSheet.Count;
 		int current = 0;

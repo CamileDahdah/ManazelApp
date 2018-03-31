@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+//TODO refactor code since this class was written in a hurry
+
 public class SettingsPanel : MonoBehaviour {
 
 	public GameObject audioToggle, tagsToggle, helpToggle, accuracySlider;
@@ -34,19 +36,19 @@ public class SettingsPanel : MonoBehaviour {
 		}
 			
 		audioToggleButton.onClick.AddListener (delegate {
-			AudioClick();
+			AudioToggle();
 
 			}
 		);
 
 		tagsToggleButton.onClick.AddListener (delegate {
-			TagsClick();
+			TagsToggle();
 
 			}
 		);
 
 		helpToggleButton.onClick.AddListener (delegate {
-			HelpClick();
+			HelpToggle();
 
 			}
 		);
@@ -70,7 +72,8 @@ public class SettingsPanel : MonoBehaviour {
 	}
 
 	void OnEnable(){
-		
+
+		//dont enable X Button for the first time user so that he passes through all the necessary panels
 		if (!GameState.instance.GetFirstTime()) {
 			xButton.gameObject.SetActive (true);
 
@@ -115,7 +118,7 @@ public class SettingsPanel : MonoBehaviour {
 	}
 
 
-	void AudioClick(){
+	void AudioToggle(){
 		
 		if (GetAudioOn() > 0) {
 			audioToggleAnim.Play (disabled);
@@ -131,7 +134,7 @@ public class SettingsPanel : MonoBehaviour {
 
 	}
 
-	void TagsClick(){
+	void TagsToggle(){
 		if (GetTagsOn() > 0) {
 			tagsToggleAnim.Play (disabled);
 			SetTagsOn(0);
@@ -143,10 +146,12 @@ public class SettingsPanel : MonoBehaviour {
 		
 	}
 
-	void HelpClick(){
-		// TODO: Only for testing purposes
+	void HelpToggle(){
+		// We used this toggle to reset the state of the app (for testing purposes only)
+		// TODO: This toggle needs to be changed later when the app is released
+
 		PlayerPrefs.DeleteAll ();
-		ReadJSON.instance.ResetAll ();
+		HandleObjectData.instance.ResetAll ();
 
 		if (GetHelpOn() > 0) {
 			helpToggleAnim.Play (disabled);

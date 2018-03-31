@@ -9,8 +9,8 @@ public class HUDPanel : MonoBehaviour {
 	public GameObject scoreText;
 
 	void OnEnable(){
-		
-		scoreText.GetComponent<Text> ().text = ScoreManager.instance.GetScore () + "/21";
+		//update score text
+		scoreText.GetComponent<Text> ().text = ScoreManager.instance.GetScore () + "/" + ScoreManager.instance.GetMaxLevelScore ();
 
 	}
 

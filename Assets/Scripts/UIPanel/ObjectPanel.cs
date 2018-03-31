@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using ArabicSupport;
 
+//TODO refactor code since this class was written in a hurry
+
 public class ObjectPanel : MonoBehaviour {
 
 	public Button nextObject, previousObject, xButton;
@@ -57,13 +59,13 @@ public class ObjectPanel : MonoBehaviour {
 
 	void NextObject(){
 		ResetPanelState ();
-		ArabicText.instance.PopupNextObject ();
+		ArabicTextHandler.instance.PopupNextObject ();
 
 	}
 
 	void PreviousObject(){
 		ResetPanelState ();
-		ArabicText.instance.PopupPreviousObject ();
+		ArabicTextHandler.instance.PopupPreviousObject ();
 
 	}
 
@@ -82,7 +84,6 @@ public class ObjectPanel : MonoBehaviour {
 
 	public void AnimateSequence(string location){
 
-		//Load All sprites
 		StopAllCoroutines ();
 		spriteSheetImage.enabled = false;
 
@@ -91,6 +92,7 @@ public class ObjectPanel : MonoBehaviour {
 
 	IEnumerator Animate(string location){
 
+		//wait UI animation to finish before loading spritesheet animation (because the animation will lag)
 		yield return new WaitUntil (() => UIManager.instance.moveUIDone == true && UIManager.instance.blurEffect == true);
 
 		Sprite[] spriteSheetArray = Resources.LoadAll <Sprite> (spriteResourceLocation + "/" + location);
@@ -126,6 +128,7 @@ public class ObjectPanel : MonoBehaviour {
 	}
 
 	public void Loading(){
+		
 		nextObject.gameObject.SetActive (false);
 		previousObject.gameObject.SetActive (false);
 		xButton.gameObject.SetActive (false);
@@ -134,19 +137,20 @@ public class ObjectPanel : MonoBehaviour {
 	}
 
 	public void Speak(){
+		
 		speakGameObject.SetActive (true);
 		loadGameObject.SetActive (false);
 	}
 
 	public void HandleConnectionError(){
+		
 		loadGameObject.SetActive (false);
-
 		UIManager.instance.MovePanelUp (GameState.State.errorPopupPanel);
 	}
 
 	public void OnTextResult(bool correct){
+		
 		StartCoroutine ("AnimateTextHolder", correct);
-
 	}
 
 	IEnumerator AnimateTextHolder(bool correct){
@@ -174,13 +178,15 @@ public class ObjectPanel : MonoBehaviour {
 
 		shadyBackground.SetActive (true);
 
+		//if the speech tecxt matches any correct word
 		if (correct) {
+			
 			background.sprite = correctPanel;
 			textHolderGameobject.GetComponent<Image> ().sprite = correctPlaceHolder;
 			youSaidGameobject.GetComponent<Text> ().color = Color.white;
 			youSaidGameobject.GetComponent<Text> ().text = "correct";
 			ScoreManager.instance.IncrementScore ();
-			ReadJSON.instance.HandleCurrentCorrectObject ();
+			HandleObjectData.instance.SaveCurrentCorrectObject ();
 			actualText.text = actualText.text.Replace("02dfa5", "FFDD68FF");
 			StartCoroutine ("AnimateCoin");
 
@@ -209,7 +215,7 @@ public class ObjectPanel : MonoBehaviour {
 			UIManager.instance.EnableCurrentPanel (GameState.State.HUDPanel);
 		}
 		else{
-			ArabicText.instance.PopupObject (ReadJSON.instance.currentID);
+			ArabicTextHandler.instance.PopupObject (HandleObjectData.instance.currenObjecttID);
 		}
 
 			

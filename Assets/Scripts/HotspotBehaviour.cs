@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//attach class to hotspots
 public class HotspotBehaviour : MonoBehaviour {
 
+	//insert view number field in inspector
 	public int viewNumber;
 
 	public void ChangeView(){
 		
-		transform.parent.gameObject.SetActive (false);
-		Main.instance.ChangeView (viewNumber);
+		RoomManager.instance.ChangeView (viewNumber);
 
 	}
 }

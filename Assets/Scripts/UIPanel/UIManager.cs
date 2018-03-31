@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+//This class handles UI Panles (enables, disables, animates them)
+
 public class UIManager : MonoBehaviour {
 
 	public static UIManager instance;
@@ -45,7 +47,7 @@ public class UIManager : MonoBehaviour {
 
 		if (panelsDictionary.ContainsKey (currentPanelString)) {
 			panelsDictionary [currentPanelString].SetActive (false);
-			ScriptManager.instance.EnableInput ();
+			InputManager.instance.EnableInput ();
 
 		} else {
 			Debug.Log ("Dictionary key not found");
@@ -57,12 +59,6 @@ public class UIManager : MonoBehaviour {
 		
 		ExitCurrentPanel ();
 		GameState.CurrentState = panelState;
-
-		if(panelState == GameState.State.HUDPanel){
-			ScriptManager.instance.EnableInput ();
-		}else{
-			ScriptManager.instance.DisableInput ();
-		}
 
 		panelsDictionary[panelState.ToString().ToLower()].SetActive (true);
 		currentPanelString = panelState.ToString().ToLower();

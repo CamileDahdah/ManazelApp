@@ -25,7 +25,7 @@ public class LevelPanel : MonoBehaviour {
 			play.GetComponentInChildren<Text>().text = "Resume";
 		}
 
-		scoreText.GetComponent<Text> ().text = ScoreManager.instance.GetScore () + "/21";
+		scoreText.GetComponent<Text> ().text = ScoreManager.instance.GetScore () + "/" + ScoreManager.instance.GetMaxLevelScore ();
 
 	}
 

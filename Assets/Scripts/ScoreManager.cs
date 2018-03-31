@@ -7,7 +7,10 @@ public class ScoreManager : MonoBehaviour {
 
 	int score;
 	public static ScoreManager instance;
-	int maxScore = 21;
+	int[] maxLevelScore = { 21, 0 , 0 , 0 , 0 };
+	int currentLevel;
+
+	//TODO Handle score of different score levels (not only level 1)
 
 	void Awake(){
 		
@@ -20,6 +23,7 @@ public class ScoreManager : MonoBehaviour {
 		}
 
 		score = GetScore ();
+		currentLevel = GameState.instance.GetCurrentLevel ();
 
 	}
 
@@ -40,12 +44,24 @@ public class ScoreManager : MonoBehaviour {
 
 	public void IncrementScore(){
 		
-		if(score + 1 <= maxScore){
+		if( score + 1 <= GetMaxLevelScore(currentLevel) ){
 			SetScore (score + 1);
 
 		}else{
-			Debug.Log("Something is wrong in the score");
+			Debug.LogError("Something is wrong in the score");
 		}
+
+	}
+
+	public int GetMaxLevelScore(int currentLevel){
+
+		return maxLevelScore [currentLevel - 1];
+
+	}
+
+	public int GetMaxLevelScore(){
+
+		return maxLevelScore [currentLevel - 1];
 
 	}
 

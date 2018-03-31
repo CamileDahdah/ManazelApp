@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameState : MonoBehaviour {
 
-	public enum State { HUDPanel = 0, objectPanel = 1, languagePanel = 2, settingsPanel, levelPanel, greenPopupPanel, blurPanel }
+	public enum State { HUDPanel = 0, objectPanel = 1, languagePanel = 2, settingsPanel, levelPanel, greenPopupPanel, blurPanel, errorPopupPanel }
 
 	private static State currentState;
 
@@ -29,9 +29,13 @@ public class GameState : MonoBehaviour {
 			}
 
 			if(currentState == State.HUDPanel){
+				
 				UIManager.instance.EnableBlur (false);
+
 			}else{
+				
 				UIManager.instance.EnableBlur (true);
+
 			}
 
 		}

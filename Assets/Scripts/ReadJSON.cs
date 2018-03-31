@@ -15,6 +15,7 @@ public class ReadJSON : MonoBehaviour {
 	int length = 0;
 	string filePath, newFilePath;
 
+
 	void Awake () {
 		
 		if (instance == null) {
@@ -140,6 +141,7 @@ public class ReadJSON : MonoBehaviour {
 
 		}
 			
+		Debug.Log ("File Exists: " + File.Exists (newFilePath));
 		if (File.Exists (newFilePath)) {
 			File.Delete (newFilePath);
 		}

@@ -15,9 +15,12 @@ public class LevelPanel : MonoBehaviour {
 	void OnEnable(){
 		
 		if (GameState.instance.GetFirstTime()) {
+
 			XButton.SetActive (false);
 			play.GetComponentInChildren<Text>().text = "Play";
+
 		} else {
+			
 			XButton.SetActive (true);
 			play.GetComponentInChildren<Text>().text = "Resume";
 		}

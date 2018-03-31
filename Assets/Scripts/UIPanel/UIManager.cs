@@ -15,6 +15,8 @@ public class UIManager : MonoBehaviour {
 	public float panelAnimationSpeed;
 	public bool moveUIDone, blurEffect;
 	Image blurImage;
+
+
 	void Awake () {
 		
 		if (instance == null) {

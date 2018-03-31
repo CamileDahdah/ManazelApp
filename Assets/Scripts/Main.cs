@@ -31,7 +31,7 @@ public class Main : MonoBehaviour {
 
 		mainMaterial = Instantiate( (Material) Resources.Load ("Materials/360View") );
 		GetComponent<MeshRenderer> ().material = mainMaterial;
-		string livingRoom = roomsPath + "/" + roomPath + "/"; //+ resourcehotspots + "/"; //+ view + "/";
+		string livingRoom = roomsPath + "/" + roomPath + "/";
 		LoadHotspots(livingRoom);
 
 	}

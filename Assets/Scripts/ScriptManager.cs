@@ -26,4 +26,5 @@ public class ScriptManager : MonoBehaviour {
 		raycast.enabled = true;
 		dragCamera.enabled = true;
 	}
+
 }

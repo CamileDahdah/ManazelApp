@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DragCamera : MonoBehaviour {
-	//mouse
+
 	public float dragSpeed = 8f;
 	Vector2 previousPosition;
 	float maxDragSpeed;
 	Vector3 direction, direction2;
 	float desiredSpeed;
 
-	//touch
+	//touch properties
 	Touch touch;
 	int touchID;
 	bool zoom;
 
-	//camera 
+	//camera properties
 	public float perspectiveZoomSpeed = 0.5f;
 	public float orthoZoomSpeed = 0.5f;
 	float maxFieldOfView;
@@ -30,10 +30,7 @@ public class DragCamera : MonoBehaviour {
 		Input.gyro.enabled = true;
 		zoom = false;
 	}
-
-	void OnEnable(){
 		
-	}
 
 	void Update () {
 
@@ -114,7 +111,7 @@ public class DragCamera : MonoBehaviour {
 
 							if(zoom){
 								touchID = touch.fingerId;
-								previousPosition = new Vector2 (touch.position.x, touch.position.y) *  scaleDPI();
+								previousPosition = new Vector2 (touch.position.x, touch.position.y) *  ScaleDPI();
 								zoom = false;
 							}
 							MoveInput(touch.position);						
@@ -142,18 +139,18 @@ public class DragCamera : MonoBehaviour {
 
 	void BeginInput(Vector3 input){
 		dragSpeed = maxDragSpeed;
-		previousPosition = new Vector2 (input.x, input.y) *  scaleDPI();
+		previousPosition = new Vector2 (input.x, input.y) *  ScaleDPI();
 	}
 
 
 	void MoveInput(Vector3 input){ 
-		direction2 = Camera.main.ScreenToViewportPoint (input * scaleDPI() - new Vector3 (previousPosition.x, previousPosition.y, 0) );
-		direction = new Vector2 (input.x, input.y) *  scaleDPI() - previousPosition; 
+		direction2 = Camera.main.ScreenToViewportPoint (input * ScaleDPI() - new Vector3 (previousPosition.x, previousPosition.y, 0) );
+		direction = new Vector2 (input.x, input.y) *  ScaleDPI() - previousPosition; 
 		 
 		transform.RotateAround(transform.position, transform.right, direction.y * 0.1f);
 		transform.parent.RotateAround(transform.parent.position, transform.parent.up, - direction.x * 0.1f);
 
-		previousPosition = new Vector2 (input.x, input.y) *  scaleDPI(); 
+		previousPosition = new Vector2 (input.x, input.y) *  ScaleDPI(); 
 
 	}
 
@@ -165,7 +162,7 @@ public class DragCamera : MonoBehaviour {
 
 	}
 
-	float scaleDPI(){
+	float ScaleDPI(){
 		return 1 / Screen.dpi * 221f;
 	}
 

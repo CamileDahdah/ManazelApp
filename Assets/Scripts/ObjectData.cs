@@ -9,9 +9,12 @@ public class ObjectData {
 	public string lbArabicWord;
 	public string saudiArabicWord;
 	public bool visited;
+
 }
 
 [System.Serializable]
 public class ObjectsData {
+	
 	public List<ObjectData> objects;
+
 }

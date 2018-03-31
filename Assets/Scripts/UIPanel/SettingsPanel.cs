@@ -144,7 +144,7 @@ public class SettingsPanel : MonoBehaviour {
 	}
 
 	void HelpClick(){
-		//!TODO 
+		// TODO: Only for testing purposes
 		PlayerPrefs.DeleteAll ();
 		ReadJSON.instance.ResetAll ();
 
@@ -202,6 +202,7 @@ public class SettingsPanel : MonoBehaviour {
 		} else {
 			PlayerPrefs.SetInt ("Mute", 0);
 		}
+
 		PlayerPrefs.Save ();
 
 		foreach (AudioSource audioSource in GameObject.FindObjectsOfType<AudioSource>()) {

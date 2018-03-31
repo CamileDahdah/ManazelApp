@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PopupPanel : MonoBehaviour {
 
 
-	public Button greenOkButton;
+	public Button greenOkButton, redOkButton;
 
 
 	void Start () {
@@ -16,9 +16,19 @@ public class PopupPanel : MonoBehaviour {
 
 		});
 
+		redOkButton.onClick.AddListener (delegate {
+			ClickErrorButton();
+
+		});
+
 	}
 
 	void ClickGreenButton(){
+		UIManager.instance.EnableCurrentPanel (GameState.State.HUDPanel);
+
+	}
+
+	void ClickErrorButton(){
 		UIManager.instance.EnableCurrentPanel (GameState.State.HUDPanel);
 
 	}

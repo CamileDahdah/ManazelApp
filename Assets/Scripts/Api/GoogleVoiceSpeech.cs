@@ -9,14 +9,15 @@ using SimpleJSON;
 using UnityEngine.UI;
 using ArabicSupport;
 
+//This class handles recording audio and Api calling the 
 [RequireComponent (typeof(AudioSource))]
-
 public class GoogleVoiceSpeech : MonoBehaviour{
 
 	public GameObject recordingButton;
 
 	float minimumLevel = 10f;
 	private ArabicText arabicText;
+
 
 	struct ClipData
 	{
@@ -25,6 +26,11 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 	private int minFreq;
 	private int maxFreq;
+
+	//Speech API parameters
+	private int frequency = 16000;
+	private string encoding = "LINEAR16";
+	string language = "ar-LB";
 
 	int clipSeconds = 20;
 
@@ -35,7 +41,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 	public string apiKey;
 	bool recording = false, uploading = false;
-	string apiURL; 
+	string apiURL, apiBaseUrl = "https://speech.googleapis.com/v1/speech:recognize?key="; 
 
 	public static GoogleVoiceSpeech instance;
 
@@ -47,20 +53,18 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 			Destroy (this);
 		}
 
-		apiURL = "https://speech.googleapis.com/v1/speech:recognize?key=" + apiKey;
+		apiURL = apiBaseUrl + apiKey;
 
-
+		//TODO should check if microphone is available every time we use microphone (not in Awake function)
+		//TODO popup error message when necessary
 		if (Microphone.devices.Length <= 0) {
 			//Throw a warning message at the console if there isn't
-			//"Microphone not connected!";
 		} else {
 
 			micConnected = true;
 
 			//Get the default microphone recording capabilities
-			Microphone.GetDeviceCaps (null, out minFreq, out maxFreq);
-
-			maxFreq = 16000;
+			//Microphone.GetDeviceCaps (null, out minFreq, out maxFreq);
 
 			goAudioSource = this.GetComponent<AudioSource> ();
 		}
@@ -91,7 +95,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 				if(!recording && !uploading){
 
 					recording = true;
-					goAudioSource.clip = Microphone.Start (null, false, clipSeconds, maxFreq);
+					goAudioSource.clip = Microphone.Start (null, false, clipSeconds, frequency);
 
 					recordingButton.GetComponent<Button> ().interactable = true;
 
@@ -128,45 +132,58 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 		yield return null;
 
-		JSONClass rootNode = new JSONClass ();
-		JSONClass configNode = new JSONClass ();
-		JSONClass audioNode = new JSONClass ();
-
-		rootNode.Add ("config", configNode);
-
-		configNode.Add ("encoding", new JSONData ("LINEAR16"));
-		configNode.Add ("sampleRateHertz", new JSONData (16000));
-		configNode.Add ("language_code", new JSONData ("ar-LB"));
-
+		//convert audio bitstream to 64 bit encoding
 		string byteString = Convert.ToBase64String(File.ReadAllBytes (filePath));
 
+		// !NOTE: I didn't use JSONClass because it was super slow to convert data to string using the .ToString() method
+		// this is the raw data payload of the API call
+		string JSONObject = 
+			
+		"{" +
 
-		audioNode.Add ("content", new JSONData(byteString));
+			" \"config\" " + ":" +
 
+				"{" +
 
-		rootNode.Add ("audio", audioNode);
+					" \"encoding\" : \"" + encoding + "\"" +"," + 
+					" \"sampleRateHertz\" " + ":" + "\"" + frequency + "\""+"," + 
+					" \"language_code\" " + ":" +  "\"" + language + "\"" +
 
-		string JSONObject = "{"+"\"config\""+":" +
-			"{"+"\"encoding\":\"LINEAR16\""+"," + "\"sampleRateHertz\""+":"+"\"16000\""+","+ "\"language_code\""+":"+"\"ar-LB\""+"}," +
-			"\"audio\""+":{"+"\"content\""+":\""+byteString+"\"}"
-			+"}";
+				"}," +
 
+			" \"audio\" "+ ":" +
 
+			"{" +
+
+				" \"content\" :\"" + byteString +"\" " +
+
+			"}"+
+
+		"}";
+
+		//Debug.Log (JSONObject);
 		UnityWebRequest request = UnityWebRequest.Post (apiURL, "");
 
 		request.uploadHandler = new UploadHandlerRaw (System.Text.Encoding.UTF8.GetBytes (JSONObject));
 
 		request.SetRequestHeader ("Content-Type", "application/json");
+		// if request time passes x seconds then most probably no internet connection
+		request.timeout = 9;
 
 		yield return request.SendWebRequest ();
 
 		if (request.isNetworkError || request.isHttpError) {
 			Debug.Log ("Error: " + request.responseCode);
+			Debug.Log ("Error: " + request.error);
+
+			NoInternetConnection ();
 
 		} else {
 
 			String response = request.downloadHandler.text;
+
 			//Debug.Log (response);
+
 			if (response != "") {
 				var jsonresponse = JSON.Parse (response);
 
@@ -183,6 +200,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 				arabicText.DetectArabicWords (transcripts);
 			}
 		}
+
 		yield return null;
 
 		File.Delete (filePath); //Delete the Temporary Wav file
@@ -206,8 +224,6 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 		/// Trim Audio
 		int lastTime = Microphone.GetPosition(null); 
 
-		//Debug.Log("lastTime =" + lastTime);
-
 		Microphone.End(null);
 
 		if (lastTime > 0) {
@@ -219,12 +235,12 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 			Array.Copy (samples, ClipSamples, ClipSamples.Length - 1);
 
-			goAudioSource.clip = AudioClip.Create ("playRecordClip", ClipSamples.Length, 1, maxFreq, false, false);
+			goAudioSource.clip = AudioClip.Create ("playRecordClip", ClipSamples.Length, 1, frequency, false, false);
 			goAudioSource.clip.SetData (ClipSamples, 0);
 		}
-		/// New code
 
-		Microphone.End (null); //Stop the audio recording
+		//Stop the audio recording
+		Microphone.End (null);
 
 		Debug.Log ("Recording Stopped");
 
@@ -247,6 +263,13 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 	}
 
+	void NoInternetConnection(){
+		
+		uploading = false;
+		ObjectPanel.instance.HandleConnectionError ();
+
+	}
+		
 
 	float[] clipSampleData = new float[256];
 
@@ -256,7 +279,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 	float soundThreshold, soundAverage;
 	bool spokeOnce;
 	float speakTimer;
-	float maxTimerThreshold = 20f, refreshRate = .1f, soundSum;
+	float maxTimerThreshold = 20f, refreshRate = .05f, soundSum;
 	int iteration, lastTime;
 
 	IEnumerator IsSpeaking(){
@@ -278,6 +301,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 		goAudioSource.Play();
 
 		while (recording) {
+			
 			//wait for 20 seconds if no one speaks
 			if (speakTimer < maxTimerThreshold) {
 				
@@ -287,6 +311,7 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 				spokeOnce = true;
 			}
+
 			//compute final threshhold
 			if (iteration == 3) {
 				soundThreshold += (soundAverage / iteration) / 2f;
@@ -345,22 +370,27 @@ public class GoogleVoiceSpeech : MonoBehaviour{
 
 				}
 			}
+
 			iteration++;
 			yield return new WaitForSeconds(refreshRate);
+
 		}
 			
 	
 	}
 
 	void OnDisable(){
+		
 		StopAllCoroutines ();
 		recording = false;
 		uploading = false;
+		Microphone.End(null);
 		if (recordingButton) {
 			recordingButton.SetActive (false);
 		}
-		Microphone.End(null);
+
 	}
+
 }
 
 

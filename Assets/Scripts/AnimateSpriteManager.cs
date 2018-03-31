@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Animate object spritesheet located in the resources folder based on its ID
+
 public class AnimateSpriteManager : MonoBehaviour {
 	
 	public List<Sprite> spriteSheet = new List<Sprite>();
@@ -13,6 +15,7 @@ public class AnimateSpriteManager : MonoBehaviour {
 
 	public static AnimateSpriteManager instance;
 
+
 	void Awake(){
 		
 		if (instance == null) {
@@ -22,10 +25,6 @@ public class AnimateSpriteManager : MonoBehaviour {
 		}
 
 		xButton.onClick.AddListener ( () =>  XButtonClick() );
-	}
-
-	void OnEnable(){
-		//GameState.CurrentState = GameState.State.objectPanel;
 	}
 
 	public void AnimateSequence(string location){

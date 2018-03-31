@@ -1,0 +1,391 @@
+fileFormatVersion: 2
+guid: 05111915e03ccd740b01485a2e7e3c04
+timeCreated: 1519753674
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: ChairCol
+    100002: ChairCol1
+    100004: ChairCol2
+    100006: ChairCol3
+    100008: Clock
+    100010: Closet10
+    100012: Closet11
+    100014: Closet12
+    100016: Closet13
+    100018: Closet14
+    100020: Closet15
+    100022: Closet5
+    100024: Closet6
+    100026: Closet7
+    100028: Closet8
+    100030: Closet9
+    100032: //RootNode
+    100034: Couch
+    100036: Curtains3
+    100038: DiningTable1
+    100040: Flower
+    100042: Fork
+    100044: Fork 1
+    100046: Fork 2
+    100048: Fork 3
+    100050: Frame1
+    100052: Frame2
+    100054: Frame3
+    100056: GroundLamp
+    100058: Knife
+    100060: Knife 1
+    100062: Knife 2
+    100064: Knife 3
+    100066: LamplCeiling
+    100068: midTable
+    100070: Painting
+    100072: pCube33
+    100074: pCube34
+    100076: pCube35
+    100078: pCube36
+    100080: pCube37
+    100082: pCube38
+    100084: pCube38 1
+    100086: pCube38 2
+    100088: pCube38 3
+    100090: pCube39
+    100092: pCube39 1
+    100094: pCube39 2
+    100096: pCube39 3
+    100098: pCube40
+    100100: pCube41
+    100102: pCube42
+    100104: pCube43
+    100106: pCube44
+    100108: pCube45
+    100110: pCube46
+    100112: Plants
+    100114: Plate
+    100116: Plate 1
+    100118: Plate 2
+    100120: Plate 3
+    100122: PlateSet
+    100124: PlateSet1
+    100126: PlateSet2
+    100128: PlateSet3
+    100130: Spoon
+    100132: Spoon 1
+    100134: Spoon 2
+    100136: Spoon 3
+    100138: TV
+    100140: Vase
+    100142: vasenFlower
+    400000: ChairCol
+    400002: ChairCol1
+    400004: ChairCol2
+    400006: ChairCol3
+    400008: Clock
+    400010: Closet10
+    400012: Closet11
+    400014: Closet12
+    400016: Closet13
+    400018: Closet14
+    400020: Closet15
+    400022: Closet5
+    400024: Closet6
+    400026: Closet7
+    400028: Closet8
+    400030: Closet9
+    400032: //RootNode
+    400034: Couch
+    400036: Curtains3
+    400038: DiningTable1
+    400040: Flower
+    400042: Fork
+    400044: Fork 1
+    400046: Fork 2
+    400048: Fork 3
+    400050: Frame1
+    400052: Frame2
+    400054: Frame3
+    400056: GroundLamp
+    400058: Knife
+    400060: Knife 1
+    400062: Knife 2
+    400064: Knife 3
+    400066: LamplCeiling
+    400068: midTable
+    400070: Painting
+    400072: pCube33
+    400074: pCube34
+    400076: pCube35
+    400078: pCube36
+    400080: pCube37
+    400082: pCube38
+    400084: pCube38 1
+    400086: pCube38 2
+    400088: pCube38 3
+    400090: pCube39
+    400092: pCube39 1
+    400094: pCube39 2
+    400096: pCube39 3
+    400098: pCube40
+    400100: pCube41
+    400102: pCube42
+    400104: pCube43
+    400106: pCube44
+    400108: pCube45
+    400110: pCube46
+    400112: Plants
+    400114: Plate
+    400116: Plate 1
+    400118: Plate 2
+    400120: Plate 3
+    400122: PlateSet
+    400124: PlateSet1
+    400126: PlateSet2
+    400128: PlateSet3
+    400130: Spoon
+    400132: Spoon 1
+    400134: Spoon 2
+    400136: Spoon 3
+    400138: TV
+    400140: Vase
+    400142: vasenFlower
+    2300000: Clock
+    2300002: Closet10
+    2300004: Closet11
+    2300006: Closet12
+    2300008: Closet13
+    2300010: Closet14
+    2300012: Closet15
+    2300014: Closet5
+    2300016: Closet6
+    2300018: Closet7
+    2300020: Closet8
+    2300022: Closet9
+    2300024: Flower
+    2300026: Fork
+    2300028: Fork 1
+    2300030: Fork 2
+    2300032: Fork 3
+    2300034: Frame1
+    2300036: Frame2
+    2300038: Frame3
+    2300040: Knife
+    2300042: Knife 1
+    2300044: Knife 2
+    2300046: Knife 3
+    2300048: Painting
+    2300050: pCube33
+    2300052: pCube34
+    2300054: pCube35
+    2300056: pCube36
+    2300058: pCube37
+    2300060: pCube38
+    2300062: pCube38 1
+    2300064: pCube38 2
+    2300066: pCube38 3
+    2300068: pCube39
+    2300070: pCube39 1
+    2300072: pCube39 2
+    2300074: pCube39 3
+    2300076: pCube40
+    2300078: pCube41
+    2300080: pCube42
+    2300082: pCube43
+    2300084: pCube44
+    2300086: pCube45
+    2300088: pCube46
+    2300090: Plate
+    2300092: Plate 1
+    2300094: Plate 2
+    2300096: Plate 3
+    2300098: Spoon
+    2300100: Spoon 1
+    2300102: Spoon 2
+    2300104: Spoon 3
+    2300106: TV
+    2300108: Vase
+    3300000: Clock
+    3300002: Closet10
+    3300004: Closet11
+    3300006: Closet12
+    3300008: Closet13
+    3300010: Closet14
+    3300012: Closet15
+    3300014: Closet5
+    3300016: Closet6
+    3300018: Closet7
+    3300020: Closet8
+    3300022: Closet9
+    3300024: Flower
+    3300026: Fork
+    3300028: Fork 1
+    3300030: Fork 2
+    3300032: Fork 3
+    3300034: Frame1
+    3300036: Frame2
+    3300038: Frame3
+    3300040: Knife
+    3300042: Knife 1
+    3300044: Knife 2
+    3300046: Knife 3
+    3300048: Painting
+    3300050: pCube33
+    3300052: pCube34
+    3300054: pCube35
+    3300056: pCube36
+    3300058: pCube37
+    3300060: pCube38
+    3300062: pCube38 1
+    3300064: pCube38 2
+    3300066: pCube38 3
+    3300068: pCube39
+    3300070: pCube39 1
+    3300072: pCube39 2
+    3300074: pCube39 3
+    3300076: pCube40
+    3300078: pCube41
+    3300080: pCube42
+    3300082: pCube43
+    3300084: pCube44
+    3300086: pCube45
+    3300088: pCube46
+    3300090: Plate
+    3300092: Plate 1
+    3300094: Plate 2
+    3300096: Plate 3
+    3300098: Spoon
+    3300100: Spoon 1
+    3300102: Spoon 2
+    3300104: Spoon 3
+    3300106: TV
+    3300108: Vase
+    4300000: TV
+    4300002: Clock
+    4300004: Painting
+    4300006: pCube37
+    4300008: pCube34
+    4300010: pCube35
+    4300012: pCube36
+    4300014: pCube33
+    4300016: pCube38
+    4300018: pCube39
+    4300020: pCube38
+    4300022: pCube39
+    4300024: pCube38
+    4300026: pCube39
+    4300028: pCube38
+    4300030: pCube39
+    4300032: Fork
+    4300034: Plate
+    4300036: Spoon
+    4300038: Knife
+    4300040: Fork
+    4300042: Plate
+    4300044: Spoon
+    4300046: Knife
+    4300048: Fork
+    4300050: Plate
+    4300052: Spoon
+    4300054: Knife
+    4300056: Fork
+    4300058: Plate
+    4300060: Spoon
+    4300062: Knife
+    4300064: Vase
+    4300066: Flower
+    4300068: pCube40
+    4300070: pCube41
+    4300072: pCube42
+    4300074: pCube43
+    4300076: pCube44
+    4300078: pCube45
+    4300080: pCube46
+    4300082: Closet5
+    4300084: Frame1
+    4300086: Closet13
+    4300088: Closet12
+    4300090: Closet14
+    4300092: Closet15
+    4300094: Closet11
+    4300096: Closet10
+    4300098: Closet9
+    4300100: Closet6
+    4300102: Closet7
+    4300104: Closet8
+    4300106: Frame2
+    4300108: Frame3
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

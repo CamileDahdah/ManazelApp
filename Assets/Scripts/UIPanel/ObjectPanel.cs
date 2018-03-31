@@ -138,6 +138,12 @@ public class ObjectPanel : MonoBehaviour {
 		loadGameObject.SetActive (false);
 	}
 
+	public void HandleConnectionError(){
+		loadGameObject.SetActive (false);
+
+		UIManager.instance.MovePanelUp (GameState.State.errorPopupPanel);
+	}
+
 	public void OnTextResult(bool correct){
 		StartCoroutine ("AnimateTextHolder", correct);
 
@@ -180,12 +186,6 @@ public class ObjectPanel : MonoBehaviour {
 
 		} else {
 			
-			//if (ArabicText.instance.speechTextUI.text != "") {
-			//	ArabicText.instance.speechTextUI.text = ArabicText.instance.theWord;
-			//} else {
-			//	ArabicText.instance.speechTextUI.text = ArabicFixer.Fix (ArabicText.instance.theWord, true, true);
-			//}
-
 			background.sprite = failPanel;
 			textHolderGameobject.GetComponent<Image> ().sprite = failPlaceHolder;
 			youSaidGameobject.GetComponent<Text> ().color = Color.white;

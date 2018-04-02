@@ -4,7 +4,7 @@
 
 Manazel is an app that helps children with speech disabilities to pronounce words correctly. The user should guess objects present in the room (or level) in order to earn points and proceed to the next level.
 
-Main Features
+#### Main Features
 
 The app uses Google non-streaming speech recognition to detect user's voice. It also uses 360 panorama technology to display room&#39;s views. Consequently, each view has its own texture.
 

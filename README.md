@@ -6,7 +6,7 @@ Manazel is an app that helps children with speech disabilities to pronounce word
 
 #### Main Features
 
-The app uses Google non-streaming speech recognition to detect user's voice. It also uses 360 panorama technology to display room&#39;s views. Consequently, each view has its own texture.
+The app uses Google non-streaming speech recognition to detect user's voice. It also uses 360 panorama technology to display room's views. Consequently, each view has its own texture.
 
 The user can either look around the room by swiping with his fingers or by rotating the device using the accelerometer. To interact with the objects in the room, he can simply click them (touch them). The object will then appear with a simple rotating sprite animation.
 

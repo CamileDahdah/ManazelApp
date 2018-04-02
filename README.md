@@ -35,18 +35,25 @@ The API call requires four main parameters in the JSON payload:
 
  I used prefabs to instantiate room views, objects, hotspots, etc. dynamically. All the prefabs are located in the Resources folder in order to load them dynamically. They are organized in this hierarchy:
 
- 1) Resources/Room/RoomName
+ 1. Resources/Room/RoomName
 
-   a)Hotspots
+   a. Hotspots
+   
     1. i)View 1
     2. ii)View 2
     3. iii)View 3
     4. iv)Till View 6
-   b)Objects
+    
+   b. Objects
+   
     1. i)View 1 till View 6
-   c)Textures (Views)
+    
+   c. Textures (Views)
+   
     1. i)View 1 till View 6
-   d)Etc.
+    
+   d. Etc.
+   
     1. i)View 1 till View 6
 
 

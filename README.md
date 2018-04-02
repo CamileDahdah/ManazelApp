@@ -23,7 +23,7 @@ The API call requires four main parameters in the JSON payload:
 3. Sample Rate Hertz (for audio sampling)
 4. Audio data in 64-bit encoding format
 
- I used SavWav library in able to save my recorded audio in WAV format.
+ I used SavWav library in order to save my recorded audio in WAV format.
 
  The audio recorder automatically stops recording when the user stops talking. It also detects the sound level of the environment in order to guess when the user is actually talking. In unity, this feature was hard to implement because you have to play the recorded audio source (which should be muted) while recording it to be able to get the amplitude of the sound.
 

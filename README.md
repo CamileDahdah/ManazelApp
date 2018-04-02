@@ -39,22 +39,25 @@ The API call requires four main parameters in the JSON payload:
 
    1. Hotspots
    
-    i)View 1
-    ii)View 2
-    iii)View 3
-    iv)Till View 6
+    i) View 1
+    
+    ii) View 2
+    
+    iii) View 3
+    
+    iv) Till View 6
     
    2. Objects
    
-    i)View 1 till View 6
+    i) View 1 till View 6
     
    3. Textures (Views)
    
-    i)View 1 till View 6
+    i) View 1 till View 6
     
    4. Etc.
    
-    1. i)View 1 till View 6
+    i) View 1 till View 6
 
 
 

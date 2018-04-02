@@ -61,6 +61,7 @@ The API call requires four main parameters in the JSON payload:
 
 
 
+
 #### Object Manager
 
  Objects are represented in a JSON file called "Objects.json" and each JSON object is structured in this way:

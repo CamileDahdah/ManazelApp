@@ -64,11 +64,11 @@ The API call requires four main parameters in the JSON payload:
 
 {
 
-"id":&quot;Sofa&quot;,
+"id": "Sofa",
 
-&quot;lbArabicWord&quot;:&quot;كنب&quot;,
+"lbArabicWord": "كنب",
 
-&quot;saudiArabicWord&quot;:&quot;كنب&quot;,
+"saudiArabicWord": "كنب"
 
 }
 
@@ -80,13 +80,13 @@ The ID of the object is used for many purposes, including a reference to its spr
 
 #### Writing to Objects.json file in Android
 
- Since Resources folder is read-only in Android (I still haven&#39;t checked for IOS), I had to copy the file form Resources folder to Application.persistentDataPath when the application is run for the first time. Hence, all the write/read operations are then applied to the new file that was created on run-time.
+ Since Resources folder is read-only in Android (I still haven't checked for IOS), I had to copy the file form Resources folder to Application.persistentDataPath when the application is run for the first time. Hence, all the write/read operations are then applied to the new file that was created on run-time.
 
 #### Colliders to objects in scene
 
  First, we were creating the colliders manually in Unity so that we can detect the rendered objects on the textures. Then, our 3D designer suggested to generate low poly colliders to all the objects for each view automatically. His approach was much more efficient to implement.
 
-Note that I haven&#39;t implemented his work yet, but we should implement it as soon as possible.
+Note that I haven't implemented his work yet, but we should implement it as soon as possible.
 
 #### Attached scripts
 

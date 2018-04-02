@@ -6,7 +6,7 @@ Manazel is an app that helps children with speech disabilities to pronounce word
 
 Main Features
 
-The app uses Google non-streaming speech recognition to detect user&#39;s voice. It also uses 360 panorama technology to display room&#39;s views. Consequently, each view has its own texture.
+The app uses Google non-streaming speech recognition to detect user's voice. It also uses 360 panorama technology to display room&#39;s views. Consequently, each view has its own texture.
 
 The user can either look around the room by swiping with his fingers or by rotating the device using the accelerometer. To interact with the objects in the room, he can simply click them (touch them). The object will then appear with a simple rotating sprite animation.
 
@@ -35,24 +35,24 @@ The API call requires four main parameters in the JSON payload:
 
  I used prefabs to instantiate room views, objects, hotspots, etc. dynamically. All the prefabs are located in the Resources folder in order to load them dynamically. They are organized in this hierarchy:
 
- 1. Resources/Room/RoomName
+ Resources/Room/RoomName
 
-   a. Hotspots
+   1. Hotspots
    
-    1. i)View 1
-    2. ii)View 2
-    3. iii)View 3
-    4. iv)Till View 6
+    i)View 1
+    ii)View 2
+    iii)View 3
+    iv)Till View 6
     
-   b. Objects
+   2. Objects
    
-    1. i)View 1 till View 6
+    i)View 1 till View 6
     
-   c. Textures (Views)
+   3. Textures (Views)
    
-    1. i)View 1 till View 6
+    i)View 1 till View 6
     
-   d. Etc.
+   4. Etc.
    
     1. i)View 1 till View 6
 
@@ -60,7 +60,7 @@ The API call requires four main parameters in the JSON payload:
 
 #### Object Manager
 
- Objects are represented in a JSON file called &quot;Objects.json&quot; and each JSON object is structured in this way:
+ Objects are represented in a JSON file called "Objects.json" and each JSON object is structured in this way:
 
 {
 
@@ -72,11 +72,11 @@ The API call requires four main parameters in the JSON payload:
 
 }
 
-The ID of the object is used for many purposes, including a reference to its sprite animation located in path: Resources/Sequences/&quot;ObjectID&quot;.
+The ID of the object is used for many purposes, including a reference to its sprite animation located in path: Resources/Sequences/"ObjectID".
 
 #### Arabic Support
 
- Unity Does not support Arabic text so I used a library called &quot;ArabicFix&quot; to attach and reverse the order of Arabic letters.
+ Unity Does not support Arabic text so I used a library called "ArabicFix" to attach and reverse the order of Arabic letters.
 
 #### Writing to Objects.json file in Android
 
@@ -90,7 +90,7 @@ Note that I haven't implemented his work yet, but we should implement it as soon
 
 #### Attached scripts
 
- Scripts are attached to each hotspot in the scene in order to manually assign a view ID for it in the inspector. Same goes for objects&#39; colliders, a script is attached to the parent game object which contains its object ID in the inspector.
+ Scripts are attached to each hotspot in the scene in order to manually assign a view ID for it in the inspector. Same goes for objects' colliders, a script is attached to the parent game object which contains its object ID in the inspector.
 
 #### Git Version Control, Google Docs, and Trello
 

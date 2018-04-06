@@ -99,7 +99,10 @@ public class RayCastHandler : MonoBehaviour {
 			// if raycast Hit
 			if ( (raycastHit = Physics.RaycastAll (Camera.main.ScreenPointToRay (Input.mousePosition), 30f)).Length > 0) {
 		
+				Debug.Log ("Neww");
 				for (int i = 0; i < raycastHit.Length; i++) {
+
+					Debug.Log(raycastHit [i].transform.parent.name);
 					
 					//if hotspot detected (hotspot has highest priority)
 					if (raycastHit [i].transform.gameObject.layer == hotspotLayerMask.value) {
@@ -107,7 +110,6 @@ public class RayCastHandler : MonoBehaviour {
 						hotspot = raycastHit [i].transform.gameObject;
 
 						if (pressUp && hotspot.GetInstanceID () == hotspotID) {
-
 							ClickHotspot (hotspot);
 
 						} 
@@ -127,7 +129,9 @@ public class RayCastHandler : MonoBehaviour {
 
 					//if object found
 					if (pressUp && objectID == raycastHit [0].transform.parent.GetComponent<SelectedObject> ().id) {
+						
 						ClickObject (objectID);
+
 					}
 					// else if press down
 					else {
